@@ -16,7 +16,7 @@ body { font-family:var(--round); color:var(--fg); -webkit-print-color-adjust:exa
   background-image: linear-gradient(rgba(34,230,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(34,230,255,.07) 1px, transparent 1px),
     radial-gradient(circle at 85% 20%, rgba(255,61,242,.18), transparent 45%), radial-gradient(circle at 10% 90%, rgba(34,230,255,.14), transparent 45%);
   background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100% }
-.slide::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:50; background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 4px) }
+.slide::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:50; background:repeating-linear-gradient(0deg, rgba(0,0,0,.10) 0 1px, transparent 1px 4px) }
 .slide:last-child { break-after:auto; page-break-after:auto }
 .bg-2 { background-color:var(--bg2) } .bg-3 { background-color:var(--bg3) }
 .wave { position:absolute; left:0; top:0; width:1280px; height:40px; display:block }
@@ -138,58 +138,60 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <defs>
-  <!-- Proofy: an original puppy mascot drawn for this deck -->
+  <!-- Proofy: an original shiba mascot drawn for this deck (cool shiba with neon shades) -->
+  <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22e6ff"/><stop offset="1" stop-color="#ff3df2"/></linearGradient>
+  <clipPath id="pup-clip"><ellipse cx="150" cy="150" rx="97" ry="85"/></clipPath>
   <g id="pup-base">
-    <ellipse cx="150" cy="262" rx="76" ry="36" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="6"/>
-    <ellipse cx="112" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
-    <ellipse cx="188" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
-    <circle cx="150" cy="140" r="92" fill="#f8e8d0" stroke="#2f2a3a" stroke-width="6"/>
-    <ellipse cx="190" cy="122" rx="34" ry="30" fill="#e7c49c"/>
-    <ellipse cx="68" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(16 68 138)"/>
-    <ellipse cx="232" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(-16 232 138)"/>
-    <ellipse cx="150" cy="182" rx="46" ry="32" fill="#fffaf0"/>
-    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#2f2a3a"/>
-    <circle cx="94" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
-    <circle cx="206" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+    <path d="M218 262 C262 262 272 212 242 202 C216 194 208 222 228 228" fill="none" stroke="#1b1630" stroke-width="24" stroke-linecap="round"/>
+    <path d="M218 262 C262 262 272 212 242 202 C216 194 208 222 228 228" fill="none" stroke="#ee9a45" stroke-width="13" stroke-linecap="round"/>
+    <ellipse cx="150" cy="266" rx="74" ry="36" fill="#ee9a45" stroke="#1b1630" stroke-width="6"/>
+    <ellipse cx="150" cy="276" rx="40" ry="22" fill="#fff4e0"/>
+    <ellipse cx="114" cy="290" rx="22" ry="11" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+    <ellipse cx="186" cy="290" rx="22" ry="11" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+    <path d="M62 112 L74 22 Q78 12 87 20 L134 66 Z" fill="#ee9a45" stroke="#1b1630" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M238 112 L226 22 Q222 12 213 20 L166 66 Z" fill="#ee9a45" stroke="#1b1630" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M78 88 L84 40 L116 68 Z M222 88 L216 40 L184 68 Z" fill="#ffd2bd"/>
+    <ellipse cx="150" cy="150" rx="100" ry="88" fill="#ee9a45" stroke="#1b1630" stroke-width="6"/>
+    <g clip-path="url(#pup-clip)"><path d="M40 196 Q58 150 104 154 Q132 158 150 146 Q168 158 196 154 Q242 150 260 196 L260 260 L40 260 Z" fill="#fff4e0"/></g>
+    <ellipse cx="110" cy="110" rx="11" ry="7" fill="#fff4e0"/><ellipse cx="190" cy="110" rx="11" ry="7" fill="#fff4e0"/>
+    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#1b1630"/><circle cx="145" cy="162" r="3.5" fill="#fff"/>
+    <circle cx="84" cy="184" r="13" fill="#ff9db0" opacity=".65"/><circle cx="216" cy="184" r="13" fill="#ff9db0" opacity=".65"/>
+  </g>
+  <g id="pup-shades">
+    <path d="M64 120 Q150 104 236 120 L232 146 Q224 172 190 168 Q166 164 160 148 Q150 141 140 148 Q134 164 110 168 Q76 172 68 146 Z" fill="#0d0b1e" stroke="#1b1630" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M68 122 Q150 107 232 122" fill="none" stroke="#22e6ff" stroke-width="3" opacity=".9"/>
+    <path d="M84 154 L106 126 L118 127 L96 157 Z M172 154 L194 126 L206 127 L184 157 Z" fill="url(#neon)"/>
   </g>
   <g id="f-happy">
-    <path d="M96 130 q16 -18 32 0 M172 130 q16 -18 32 0" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <path d="M140 190 q10 18 20 0 z" fill="#e98585" stroke="#2f2a3a" stroke-width="3"/>
-    <path d="M150 176 v8 M150 184 q-12 10 -22 0 M150 184 q12 10 22 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+    <use href="#pup-shades"/>
+    <path d="M150 176 v8 M150 184 q-12 10 -22 2 M150 184 q16 12 30 -4" fill="none" stroke="#1b1630" stroke-width="5" stroke-linecap="round"/>
   </g>
   <g id="f-shock">
-    <circle cx="112" cy="128" r="21" fill="#fff" stroke="#2f2a3a" stroke-width="5"/><circle cx="112" cy="131" r="11" fill="#2f2a3a"/><circle cx="116" cy="126" r="4" fill="#fff"/>
-    <circle cx="188" cy="128" r="21" fill="#fff" stroke="#2f2a3a" stroke-width="5"/><circle cx="188" cy="131" r="11" fill="#2f2a3a"/><circle cx="192" cy="126" r="4" fill="#fff"/>
-    <ellipse cx="150" cy="198" rx="10" ry="13" fill="#2f2a3a"/>
-    <path d="M246 70 q12 18 0 26 q-12 -8 0 -26 z" fill="#b3d3e2" stroke="#2f2a3a" stroke-width="3"/>
+    <circle cx="112" cy="138" r="18" fill="#fff" stroke="#1b1630" stroke-width="5"/><circle cx="112" cy="141" r="9" fill="#1b1630"/>
+    <circle cx="188" cy="138" r="18" fill="#fff" stroke="#1b1630" stroke-width="5"/><circle cx="188" cy="141" r="9" fill="#1b1630"/>
+    <g transform="translate(150 70) scale(.62) translate(-150 -136)"><use href="#pup-shades"/></g>
+    <ellipse cx="150" cy="200" rx="10" ry="13" fill="#1b1630"/>
+    <path d="M250 70 q12 18 0 26 q-12 -8 0 -26 z" fill="#9fdcff" stroke="#1b1630" stroke-width="3"/>
   </g>
   <g id="f-puzzle">
-    <circle cx="112" cy="130" r="13" fill="#2f2a3a"/><circle cx="116" cy="125" r="4" fill="#fff"/>
-    <path d="M176 132 h26" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <path d="M172 104 l32 -10" stroke="#2f2a3a" stroke-width="6" stroke-linecap="round"/>
-    <path d="M132 196 q9 -9 18 0 t18 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
-    <text x="242" y="74" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="64" fill="#2f2a3a">?</text>
-  </g>
-  <g id="f-shrug">
-    <path d="M98 128 h28 M174 128 h28" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <path d="M96 118 q15 -8 30 0 M174 118 q15 -8 30 0" fill="none" stroke="#2f2a3a" stroke-width="4" stroke-linecap="round"/>
-    <path d="M136 194 h28" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
-    <path d="M86 248 Q50 236 40 206 M214 248 Q250 236 260 206" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="40" cy="200" r="16" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
-    <circle cx="260" cy="200" r="16" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <use href="#pup-shades"/>
+    <path d="M170 100 l36 -12" stroke="#1b1630" stroke-width="7" stroke-linecap="round"/>
+    <path d="M134 196 q8 -8 16 0 t16 0" fill="none" stroke="#1b1630" stroke-width="5" stroke-linecap="round"/>
+    <text x="244" y="76" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="64" fill="#ffc53d" stroke="#1b1630" stroke-width="3">?</text>
   </g>
   <g id="p-receipt">
-    <g transform="rotate(14 196 206)"><rect x="166" y="186" width="66" height="44" rx="4" fill="#fff" stroke="#2f2a3a" stroke-width="4"/><path d="M176 199 h46 M176 210 h36 M176 221 h26" stroke="#2f2a3a" stroke-width="3" stroke-linecap="round"/></g>
+    <g transform="rotate(14 196 206)"><rect x="166" y="186" width="66" height="44" rx="4" fill="#fff" stroke="#1b1630" stroke-width="4"/><path d="M176 199 h46 M176 210 h36 M176 221 h26" stroke="#1b1630" stroke-width="3" stroke-linecap="round"/></g>
   </g>
   <g id="p-glass">
-    <line x1="230" y1="250" x2="210" y2="272" stroke="#2f2a3a" stroke-width="10" stroke-linecap="round"/>
-    <circle cx="250" cy="228" r="27" fill="#d8ecf3" fill-opacity=".85" stroke="#2f2a3a" stroke-width="7"/>
+    <line x1="230" y1="250" x2="210" y2="272" stroke="#1b1630" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="250" cy="228" r="27" fill="#d8ecf3" fill-opacity=".85" stroke="#1b1630" stroke-width="7"/>
     <path d="M238 216 q6 -6 14 -6" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <circle cx="212" cy="268" r="14" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <circle cx="212" cy="268" r="14" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
   </g>
   <g id="p-wave">
-    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="254" cy="178" r="17" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#1b1630" stroke-width="24" stroke-linecap="round"/>
+    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#ee9a45" stroke-width="13" stroke-linecap="round"/>
+    <circle cx="254" cy="178" r="17" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
   </g>
   <g id="i-read"><rect x="12" y="4" width="46" height="62" rx="8" fill="#f5e2a8" stroke="#2f2a3a" stroke-width="5"/><path d="M22 22 H48 M22 34 H48 M22 46 H38" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/></g>
   <g id="i-gate"><path d="M35 4 L62 14 V36 Q62 58 35 66 Q8 58 8 36 V14 Z" fill="#b3d3e2" stroke="#2f2a3a" stroke-width="5"/><path d="M22 36 L32 46 L50 26" fill="none" stroke="#2f2a3a" stroke-width="6" stroke-linecap="round"/></g>
@@ -235,7 +237,7 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
 <section class="slide s3 bg-3">
   <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
   <div class="head"><div class="lbl pop d1">How it works</div><h2 class="glitch pop d1">Read → Gate → Run → Receipt</h2></div>
-  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:20px;width:160px;height:165px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/><use href="#p-glass"/></svg>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:40px;width:150px;height:155px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/><use href="#p-glass"/></svg>
   <div class="cards">
     <div class="card pop d1"><div class="n">1</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-read"/></svg><div class="t">Read</div><p>It reads the README.</p><p>A planner suggests how to run it and which claims to check.</p></div>
     <div class="card pop d2"><div class="n">2</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-gate"/></svg><div class="t">Gate</div><p>Only allow-listed commands run.</p><p>README text never becomes a free command.</p></div>
@@ -285,7 +287,7 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
 <section class="slide s6 bg-3">
   <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
   <div class="head"><div class="lbl pop d1">Evidence</div><h2 class="glitch pop d1">What we measured first</h2><p class="sub pop d2">We ran 10 recent public hackathon repos in Daytona first.</p></div>
-  <svg class="pup bob" viewBox="0 0 300 310" style="right:70px;top:24px;width:180px;height:186px"><use href="#pup-base"/><use href="#f-puzzle"/><use href="#p-headset"/></svg>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:70px;top:40px;width:166px;height:172px"><use href="#pup-base"/><use href="#f-puzzle"/><use href="#p-headset"/></svg>
   <div class="grid">
     <div class="box txt pop d2"><span class="big">1 of 10</span>Guessing the start command: only 1 of 10 came up.</div>
     <div class="box txt pop d3"><span class="big">README helps</span>Following the README: much better. Of 5 repos, 2 served, 1 passed tests, 2 failed.</div>
@@ -327,7 +329,7 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
 <section class="slide s8j bg-2">
   <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
   <div class="head" style="top:50px"><div class="lbl pop d1">Judging criteria</div><h2 class="glitch pop d1">How we meet the judging criteria</h2></div>
-  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:20px;width:130px;height:134px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:38px;width:120px;height:124px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
   <div class="jrows">
     <div class="jrow box pop d2"><span class="ck">✓</span><span class="nm">Innovation</span><p><b>Receipts, not opinions.</b> The verdict comes from exit codes and measurements, not from an LLM.</p></div>
     <div class="jrow box pop d3"><span class="ck">✓</span><span class="nm">Completeness</span><p><b>It works end to end today:</b> paste a GitHub repo → Daytona sandbox → verdicts → receipt in under 30 seconds. Web UI + CLI.</p></div>
