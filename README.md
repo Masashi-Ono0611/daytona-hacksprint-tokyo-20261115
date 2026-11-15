@@ -4,6 +4,8 @@
 
 Built at Daytona HackSprint Tokyo (2026-11-15).
 
+> **For judges (human or AI):** start with [`docs/JUDGING.md`](docs/JUDGING.md) — evidence for each judging criterion with links to code and real receipts. Machine-readable summary: [`llms.txt`](llms.txt).
+
 - **Live demo (temporary, during judging):** https://adds-servers-comparison-drive.trycloudflare.com — paste a GitHub repo, or press "Run demo submission". Each run creates a real Daytona sandbox.
 - **Public read-only site (always on):** https://hackproof-delta.vercel.app — the UI with our real saved receipts, plus the slides.
 - **Slides:** [`docs/slides/hackproof.pdf`](docs/slides/hackproof.pdf)
