@@ -90,6 +90,8 @@
     main, .topband .inner { padding-left: 16px; padding-right: 16px; }
     .table-wrap { overflow-x: auto; }
   }
+  .static-banner { margin: 0 0 14px; padding: 12px 16px; border: 3px solid #2b2a33; border-radius: 14px; background: #fff3c4; box-shadow: 4px 4px 0 #2b2a33; line-height: 1.5; }
+  .static-banner a { font-weight: 700; }
 </style>
 </head>
 <body>
@@ -190,8 +192,25 @@
   function setStatus(msg, isErr) { var s = $('status'); s.textContent = msg || ''; s.className = isErr ? 'err' : ''; }
   function busy(b) { $('verifyBtn').disabled = b; $('demoBtn').disabled = b; }
 
+  // Static (read-only) mode: on a static host there is no /api. Saved real receipts are served from /data/.
+  var STATIC = false;
+  function staticUrl(url) {
+    if (url === '/api/receipts') return '/data/receipts.json';
+    var m = /^\/api\/receipts\/([A-Za-z0-9-]+)$/.exec(url);
+    return m ? '/data/receipts/' + m[1] + '.json' : null;
+  }
   async function getJSON(url, opts) {
+    if (STATIC) {
+      var su = staticUrl(url);
+      if (!su) throw new Error('Live verification is not available on this public page. Run it locally: npm run dev (needs your own Daytona API key).');
+      url = su; opts = undefined;
+    }
     var r = await fetch(url, opts);
+    if (!STATIC && r.status === 404 && url === '/api/receipts') {
+      STATIC = true;
+      showStaticBanner();
+      return getJSON(url, opts);
+    }
     var txt = await r.text();
     var data; try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = null; }
     if (!r.ok) throw new Error((data && data.error) ? str(data.error) : ('HTTP ' + r.status));
@@ -322,11 +341,25 @@
         stepBody])])]));
 
     var sha = el('div', { class: 'sha' }, ['sha256: ', str(r.sha256 || '—'), '   ']);
-    if (r.id) sha.appendChild(el('a', { href: '/api/receipts/' + encodeURIComponent(str(r.id)), download: 'hackproof-' + str(r.id) + '.json', text: 'Download JSON' }));
+    if (r.id) sha.appendChild(el('a', { href: (STATIC ? '/data/receipts/' : '/api/receipts/') + encodeURIComponent(str(r.id)) + (STATIC ? '.json' : ''), download: 'hackproof-' + str(r.id) + '.json', text: 'Download JSON' }));
     root.appendChild(sha);
 
     $('receiptSection').classList.remove('hidden');
     $('receiptSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showStaticBanner() {
+    if ($('staticBanner')) return;
+    var b = el('div', { id: 'staticBanner', class: 'static-banner' }, [
+      el('strong', { text: 'Public read-only page. ' }),
+      el('span', { text: 'These are real receipts from our runs in Daytona sandboxes. Live verification needs a Daytona API key, so it runs locally: clone the repo, add DAYTONA_API_KEY, then npm run dev. ' }),
+      el('a', { href: 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115', text: 'GitHub repo' }),
+      el('span', { text: ' · ' }),
+      el('a', { href: '/slides/hackproof.pdf', text: 'Slides (PDF)' })
+    ]);
+    var form = $('form');
+    form.parentNode.insertBefore(b, form);
+    $('verifyBtn').disabled = true; $('demoBtn').disabled = true;
   }
 
   async function loadPast() {

@@ -1,0 +1,149 @@
+{
+  "id": "20261115063134-4f4ace",
+  "source": {
+    "kind": "git",
+    "url": "https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115",
+    "subdir": "demo-submissions/acme-notes"
+  },
+  "commit": "6b7320423116853cfc50141cef57a8aff9dd3ec6",
+  "startedAt": "2026-11-15T06:31:34.480Z",
+  "finishedAt": "2026-11-15T06:31:49.583Z",
+  "totalMs": 15103,
+  "sandbox": {
+    "id": "0339d40e-2872-4cf8-a015-190588b24d88",
+    "createMs": 1227
+  },
+  "planner": {
+    "kind": "heuristic"
+  },
+  "steps": [
+    {
+      "name": "clone",
+      "cmd": "git clone --depth 1 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115' app",
+      "exitCode": 0,
+      "ms": 1950,
+      "outputTail": "Cloning into 'app'...\n"
+    },
+    {
+      "name": "install",
+      "cmd": "npm install --no-audit --no-fund --loglevel=error",
+      "exitCode": 0,
+      "ms": 789,
+      "outputTail": "\nup to date in 302ms\n"
+    },
+    {
+      "name": "start",
+      "cmd": "nohup sh -c 'PORT=3000 npm start' > /tmp/app.log 2>&1 &",
+      "exitCode": 0,
+      "ms": 373,
+      "outputTail": ""
+    },
+    {
+      "name": "app-log",
+      "cmd": "tail /tmp/app.log",
+      "exitCode": 0,
+      "ms": 0,
+      "outputTail": "\n> acme-notes@0.1.0 start\n> node server.js\n\nacme-notes listening on http://localhost:3000\n"
+    }
+  ],
+  "app": {
+    "status": "runs",
+    "port": 3000
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "text": "`npm test` — 6 tests pass",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 6
+      },
+      "verdict": "verified",
+      "reason": "6 passed, 0 failed; claim says 6",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.617703ms)\n✔ listNotes returns copies, not references (0.143941ms)\n✔ search matches title case-insensitively (0.591804ms)\n✔ search matches body text (0.136401ms)\n✔ empty query returns everything (0.103071ms)\n✔ no match returns empty list (0.666994ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 61.193364\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c2",
+      "text": "GET /health returns 200",
+      "check": {
+        "kind": "http_status",
+        "path": "/health",
+        "expect": 200
+      },
+      "verdict": "verified",
+      "reason": "GET /health returned 200",
+      "evidence": {
+        "cmd": "curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://127.0.0.1:3000/health",
+        "exitCode": 0,
+        "observed": "HTTP 200"
+      }
+    },
+    {
+      "id": "c3",
+      "text": "p50 latency under 50 ms on /notes",
+      "check": {
+        "kind": "latency",
+        "path": "/notes",
+        "samples": 20,
+        "p50MaxMs": 50
+      },
+      "verdict": "verified",
+      "reason": "p50 0.4 ms over 20 sequential requests, measured inside this sandbox (loopback; not a production network) <= 50 ms",
+      "evidence": {
+        "cmd": "for i in $(seq 20); do curl -s -o /dev/null -w '%{time_total}\\n' --max-time 10 http://127.0.0.1:3000/notes; done",
+        "exitCode": 0,
+        "observed": "p50 0.4 ms over 20 sequential requests, measured inside this sandbox (loopback; not a production network)"
+      }
+    },
+    {
+      "id": "c4",
+      "text": "`npm test` — 12 tests pass on the full suite",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 12
+      },
+      "verdict": "refuted",
+      "reason": "6 passed, 0 failed (exit 0); claim says 12",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.605564ms)\n✔ listNotes returns copies, not references (0.210151ms)\n✔ search matches title case-insensitively (0.561603ms)\n✔ search matches body text (0.131281ms)\n✔ empty query returns everything (0.102631ms)\n✔ no match returns empty list (0.796235ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 69.489224\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c5",
+      "text": "AI summaries powered by an external LLM (requires OPENAI_API_KEY)",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "requires a secret/API key; HackProof never passes secrets into the sandbox"
+      },
+      "verdict": "not_checkable",
+      "reason": "requires a secret/API key; HackProof never passes secrets into the sandbox"
+    },
+    {
+      "id": "c6",
+      "text": "Loved by 500+ users",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "claim about real-world usage cannot be reproduced by execution"
+      },
+      "verdict": "not_checkable",
+      "reason": "claim about real-world usage cannot be reproduced by execution"
+    }
+  ],
+  "summary": {
+    "verified": 3,
+    "refuted": 1,
+    "inconclusive": 0,
+    "not_checkable": 2
+  },
+  "sha256": "b9cc09bf1411bac36a2501c47054b2b324348b85007ccd5c4683cdf81ae57c41"
+}
