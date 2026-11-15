@@ -36,6 +36,16 @@ Real run on GitHub `main` (receipt `20261115065249-39e5cb`, planner `nosana-llm`
 
 The input is our own demo project [`demo-submissions/acme-notes`](../demo-submissions/acme-notes), which contains one false claim on purpose.
 
+**Organizer batch mode** — check several submissions at once, each in its own Daytona sandbox (up to 3 in parallel): `npm run batch -- <dir-or-github-url> ...` or `POST /api/batch`. Real batch with the Nosana planner, report [`batch-20261115070858-384c`](../receipts/batch-20261115070858-384c.json), 62.1 s for 3 submissions:
+
+| Submission (our own demos) | App | Verified | Refuted | Inconclusive | Not checkable | Receipt |
+|---|---|---|---|---|---|---|
+| [`acme-notes`](../demo-submissions/acme-notes) | runs | 3 | 1 | 0 | 2 | [`20261115070858-44910d`](../receipts/20261115070858-44910d.json) |
+| [`weather-dash`](../demo-submissions/weather-dash) — README says 5 tests pass, one fails | runs | 2 | 1 | 0 | 1 | [`20261115070858-75afb2`](../receipts/20261115070858-75afb2.json) |
+| [`quiz-bot`](../demo-submissions/quiz-bot) — needs DATABASE_URL, so the app cannot start without secrets | fails | 1 | 0 | 1 | 1 | [`20261115070858-982c29`](../receipts/20261115070858-982c29.json) |
+
+For `quiz-bot`, "GET /health returns 200" is `inconclusive`, not `refuted`: the app did not start because HackProof never passes secrets, so the claim could not be tested. The batch report orders submissions by a simple score (verified×2, +2 if the app runs, −3 per refuted claim); it is only an ordering aid, and every verdict stays per claim.
+
 ## 3. Real-life problem solving
 
 - **Problem:** judges get many projects and a few minutes for each. They cannot clone and run every repo, so a confident README can beat software that really works.
