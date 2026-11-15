@@ -6,6 +6,7 @@ const OUT = 'site'
 rmSync(OUT, { recursive: true, force: true })
 mkdirSync(join(OUT, 'data', 'receipts'), { recursive: true })
 copyFileSync('public/index.html', join(OUT, 'index.html'))
+copyFileSync('public/favicon.svg', join(OUT, 'favicon.svg'))
 
 const list = []
 for (const f of readdirSync('receipts').filter(f => f.endsWith('.json') && !f.startsWith('batch-'))) {

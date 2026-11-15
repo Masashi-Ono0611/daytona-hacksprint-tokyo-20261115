@@ -11,6 +11,7 @@ Key facts (all from saved receipts in this repo):
 
 ## Judges
 - [Evidence for each judging criterion](docs/JUDGING.md): Innovation, Completeness, Real-life problem solving, Sponsored product usage, each with links to code and receipts
+- [Demo video (YouTube)](https://youtu.be/oWG9ZQBE9ZU)
 - [Slides (PDF)](docs/slides/hackproof.pdf)
 - [Public read-only site](https://hackproof-delta.vercel.app)
 

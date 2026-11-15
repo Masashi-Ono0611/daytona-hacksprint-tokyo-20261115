@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HackProof</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
   :root {
     --ink:#2f2a3a; --ink2:#5a5366; --cream:#fbf3e4; --butter:#f5e2a8; --sky:#b3d3e2; --rose:#e9bfc2;
@@ -116,6 +116,52 @@
   td code { background:#05071a; color:#c9f7ff; }
   a, summary { color:#22e6ff; }
   .static-banner { background:#1b2250; border-color:#ffc53d; box-shadow:4px 4px 0 #ffc53d; color:#eef2ff; }
+  /* Site nav: app / slides / demo video */
+  .topband .inner { flex-wrap: wrap; }
+  .topband .inner > div { min-width: 0; flex: 1 1 auto; }
+  .sitenav { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 4px; }
+  .sitenav a, .sitenav button { font: 400 16px/1 var(--round); color: #eef2ff; text-decoration: none; padding: 8px 14px;
+    border-radius: 999px; border: 2px solid #2a3370; background: #141a3d; box-shadow: none; cursor: pointer; }
+  .sitenav a:hover, .sitenav button:hover:not(:disabled) { border-color: #22e6ff; box-shadow: 0 0 12px rgba(34,230,255,.55); transform: none; }
+  .sitenav a:focus-visible, .sitenav button:focus-visible, .demo-fab:focus-visible, .demo-close:focus-visible { outline: 3px solid #22e6ff; outline-offset: 2px; }
+  .sitenav a[aria-current="page"] { border-color: #ff3df2; box-shadow: 0 0 10px rgba(255,61,242,.5); }
+  .sitenav .small { font-size: 14px; padding: 7px 11px; color: #aab3d9; }
+  .sitenav .sep { flex: 0 0 auto; width: 2px; height: 22px; background: #2a3370; }
+  /* Floating demo button */
+  .demo-fab { position: fixed; right: 22px; bottom: 22px; z-index: 40; display: inline-flex; align-items: center; gap: 10px;
+    font: 400 17px/1 var(--round); color: #eef2ff; background: #120b2e; border: 2px solid #22e6ff; border-radius: 999px;
+    padding: 12px 20px 12px 12px; box-shadow: 0 0 0 2px rgba(255,61,242,.55), 0 0 22px rgba(34,230,255,.55), 0 0 34px rgba(255,61,242,.35); }
+  .demo-fab:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 0 2px #ff3df2, 0 0 28px rgba(34,230,255,.8), 0 0 40px rgba(255,61,242,.5); }
+  .demo-fab:active:not(:disabled) { transform: none; box-shadow: 0 0 0 2px #ff3df2, 0 0 16px rgba(34,230,255,.6); }
+  .demo-fab .play { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: linear-gradient(135deg, #22e6ff, #ff3df2); }
+  .demo-fab .play svg { width: 12px; height: 12px; margin-left: 2px; }
+  .demo-fab .dur { color: #aab3d9; }
+  /* Video modal */
+  .demo-modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px;
+    background: rgba(5,7,26,.78); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .demo-modal[hidden] { display: none; }
+  .demo-panel { position: relative; width: min(960px, 92vw); animation: modalIn .22s cubic-bezier(.3,1.3,.5,1) both; }
+  @keyframes modalIn { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
+  .demo-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border: 2px solid #22e6ff; border-radius: 14px;
+    overflow: hidden; box-shadow: 6px 6px 0 #ff3df2, 0 0 30px rgba(34,230,255,.45); }
+  .demo-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .demo-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .demo-head h2 { margin: 0; font-size: 20px; color: #eef2ff; }
+  .demo-close { flex: none; width: 44px; height: 44px; padding: 0; border-radius: 50%; font: 400 28px/1 var(--body);
+    color: #eef2ff; background: #141a3d; border: 2px solid #ff3df2; box-shadow: 0 0 14px rgba(255,61,242,.6); }
+  .demo-close:hover:not(:disabled) { transform: none; box-shadow: 0 0 20px rgba(255,61,242,.9); }
+  body.modal-open { overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) { .demo-panel { animation: none; } .demo-fab:hover:not(:disabled) { transform: none; } }
+  @media (max-width: 760px) {
+    .sitenav { gap: 6px; }
+    .sitenav a, .sitenav button { font-size: 14px; padding: 7px 11px; }
+    .sitenav .small { font-size: 13px; padding: 6px 9px; }
+    .demo-fab { right: 14px; bottom: 14px; font-size: 14px; gap: 8px; padding: 8px 14px 8px 8px; }
+    .demo-fab .play { width: 24px; height: 24px; }
+    .demo-fab .play svg { width: 10px; height: 10px; }
+    main { padding-bottom: 84px; }
+  }
 </style>
 </head>
 <body>
@@ -183,6 +229,14 @@
       <h1>HackProof <span class="sub">— receipts for hackathon claims</span></h1>
       <p class="tagline"><span>Run it. Then judge it.</span></p>
     </div>
+    <nav class="sitenav" aria-label="Site">
+      <a href="/" id="navApp" aria-current="page">App</a>
+      <a href="/slides/">Slides</a>
+      <button type="button" id="navDemo" aria-haspopup="dialog">Demo video</button>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="small" href="/slides/hackproof.pdf">PDF</a>
+      <a class="small" href="https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115">GitHub</a>
+    </nav>
   </div>
 </header>
 <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#f5e2a8"/></svg>
@@ -219,6 +273,20 @@
 
   <footer>Verdicts come from exit codes and measurements inside a disposable Daytona sandbox. The LLM only proposes what to check. Results apply to this commit and this environment.</footer>
 </main>
+
+<button type="button" class="demo-fab" id="demoFab" aria-haspopup="dialog">
+  <span class="play" aria-hidden="true"><svg viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z" fill="#0b0f2a"/></svg></span>
+  <span>Watch the demo <span class="dur">· 1:40</span></span>
+</button>
+<div class="demo-modal" id="demoModal" hidden>
+  <div class="demo-panel" id="demoPanel" role="dialog" aria-modal="true" aria-labelledby="demoTitle" tabindex="-1">
+    <div class="demo-head">
+      <h2 id="demoTitle">HackProof demo · 1:40</h2>
+      <button type="button" class="demo-close" id="demoClose" aria-label="Close video">×</button>
+    </div>
+    <div class="demo-frame" id="demoFrame"></div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -462,6 +530,71 @@
   });
   $('demoBtn').addEventListener('click', function () { start({ localDir: 'demo-submissions/acme-notes' }); });
   loadPast();
+})();
+</script>
+<script>
+// Demo video modal + site nav. The iframe exists only while the dialog is open (closing stops the video).
+(function () {
+  'use strict';
+  var EMBED = 'https://www.youtube-nocookie.com/embed/oWG9ZQBE9ZU?autoplay=1&rel=0';
+  var modal = document.getElementById('demoModal');
+  var panel = document.getElementById('demoPanel');
+  var frame = document.getElementById('demoFrame');
+  var closeBtn = document.getElementById('demoClose');
+  var opener = null;
+
+  function focusables() {
+    return Array.prototype.filter.call(panel.querySelectorAll('button, iframe, a[href], [tabindex]:not([tabindex="-1"])'),
+      function (n) { return !n.disabled; });
+  }
+  function openDemo(from) {
+    if (!modal.hidden) return;
+    opener = from || document.activeElement;
+    var f = document.createElement('iframe');
+    f.src = EMBED;
+    f.title = 'HackProof demo video';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.setAttribute('allowfullscreen', '');
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.replaceChildren(f);
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    closeBtn.focus();
+  }
+  function closeDemo() {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    frame.replaceChildren();
+    document.body.classList.remove('modal-open');
+    if (location.hash === '#demo') history.replaceState(null, '', location.pathname + location.search);
+    var back = opener && document.contains(opener) ? opener : document.getElementById('demoFab');
+    opener = null;
+    back.focus();
+  }
+
+  document.getElementById('demoFab').addEventListener('click', function (e) { openDemo(e.currentTarget); });
+  document.getElementById('navDemo').addEventListener('click', function (e) { openDemo(e.currentTarget); });
+  closeBtn.addEventListener('click', closeDemo);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeDemo(); });
+  document.addEventListener('keydown', function (e) {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeDemo(); return; }
+    if (e.key === 'Tab') {
+      var list = focusables(); if (!list.length) return;
+      var first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  function fromHash() { if (location.hash === '#demo') openDemo(document.getElementById('demoFab')); }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+
+  document.getElementById('navApp').addEventListener('click', function (e) {
+    e.preventDefault();
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
 })();
 </script>
 </body>
