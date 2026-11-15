@@ -2,7 +2,17 @@
   "name": "daytona-hacksprint-tokyo-20261115",
   "private": true,
   "type": "module",
-  "scripts": { "hello": "tsx --env-file=.env src/hello.ts" },
-  "dependencies": { "@daytonaio/sdk": "^0.231.1" },
-  "devDependencies": { "tsx": "^4.19.0", "typescript": "^5.6.0" }
+  "scripts": {
+    "hello": "tsx --env-file=.env src/hello.ts",
+    "dev": "tsx --env-file=.env src/server.ts",
+    "verify": "tsx --env-file=.env src/cli.ts",
+    "test:allowlist": "tsx src/verifier/allowlist.ts"
+  },
+  "dependencies": {
+    "@daytonaio/sdk": "^0.231.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
 }

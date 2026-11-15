@@ -1,0 +1,15 @@
+{
+  "name": "acme-notes",
+  "version": "0.1.0",
+  "description": "Lightning-fast searchable notes API",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

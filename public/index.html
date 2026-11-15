@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HackProof</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel2: #1f2630; --line: #30363d;
+    --text: #f0f3f6; --muted: #9da7b3; --accent: #58a6ff;
+    --green: #2ea043; --red: #da3633; --amber: #d29922; --grey: #6e7681;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 20px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 44px; margin: 0 0 4px; letter-spacing: -0.5px; }
+  h2 { font-size: 28px; margin: 0 0 16px; }
+  .tagline { font-size: 24px; color: var(--muted); margin: 0 0 28px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  form { display: grid; grid-template-columns: 1fr 220px 180px; gap: 12px; }
+  label { display: block; font-size: 16px; color: var(--muted); margin-bottom: 4px; }
+  input { width: 100%; font: inherit; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); }
+  input:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
+  .actions { grid-column: 1 / -1; display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  button { font: inherit; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--panel2); color: var(--text); cursor: pointer; }
+  button.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  button:disabled { opacity: .5; cursor: progress; }
+  #status { margin-top: 12px; color: var(--muted); min-height: 1.5em; }
+  #status.err { color: #ff7b72; }
+  #log { font: 16px/1.45 var(--mono); background: #010409; border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
+  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 24px; margin-bottom: 20px; }
+  .meta div span { display: block; font-size: 15px; color: var(--muted); }
+  .meta div b { font: 600 19px var(--mono); word-break: break-all; }
+  .badge { display: inline-block; padding: 3px 12px; border-radius: 999px; font: 700 16px system-ui, sans-serif;
+    color: #fff; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+  .b-verified, .b-runs { background: var(--green); }
+  .b-refuted, .b-fails { background: var(--red); }
+  .b-inconclusive { background: var(--amber); color: #111; }
+  .b-not_checkable, .b-not_started, .b-unknown { background: var(--grey); }
+  .summary { font-size: 24px; font-weight: 600; margin: 8px 0 16px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 10px; border-top: 1px solid var(--line); }
+  th { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; border-top: none; }
+  td.claim { font-weight: 600; }
+  code, .mono { font-family: var(--mono); font-size: 16px; }
+  .ev div { font: 16px/1.4 var(--mono); word-break: break-word; }
+  details { margin-top: 6px; }
+  summary { cursor: pointer; color: var(--accent); }
+  pre.tail { font: 14px/1.4 var(--mono); background: #010409; border: 1px solid var(--line); border-radius: 6px;
+    padding: 10px; max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+  .sha { font: 15px var(--mono); color: var(--muted); word-break: break-all; margin-top: 16px; }
+  a { color: var(--accent); }
+  ul.past { list-style: none; margin: 0; padding: 0; }
+  ul.past li { padding: 12px 8px; border-top: 1px solid var(--line); cursor: pointer; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  ul.past li:hover, ul.past li:focus { background: var(--panel2); outline: none; }
+  .muted { color: var(--muted); }
+  footer { color: var(--muted); font-size: 17px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .hidden { display: none; }
+  @media (max-width: 760px) {
+    body { font-size: 17px; } h1 { font-size: 32px; }
+    form { grid-template-columns: 1fr; }
+    main { padding: 20px 16px 40px; }
+    .table-wrap { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>HackProof — receipts for hackathon claims</h1>
+    <p class="tagline">Don't trust the README. Run it.</p>
+  </header>
+
+  <section>
+    <form id="form" autocomplete="off">
+      <div><label for="repoUrl">GitHub repo URL</label>
+        <input id="repoUrl" type="url" placeholder="https://github.com/team/project"></div>
+      <div><label for="subdir">Subdir (optional)</label><input id="subdir" placeholder="apps/api"></div>
+      <div><label for="ref">Ref (optional)</label><input id="ref" placeholder="main"></div>
+      <div class="actions">
+        <button type="submit" class="primary" id="verifyBtn">Verify</button>
+        <button type="button" id="demoBtn">Run demo submission (acme-notes)</button>
+      </div>
+    </form>
+    <div id="status" role="status"></div>
+  </section>
+
+  <section id="logSection" class="hidden">
+    <h2>Live log</h2>
+    <pre id="log"></pre>
+  </section>
+
+  <section id="receiptSection" class="hidden">
+    <h2>Receipt</h2>
+    <div id="receipt"></div>
+  </section>
+
+  <section>
+    <h2>Past receipts</h2>
+    <ul class="past" id="past"><li class="muted">Loading…</li></ul>
+  </section>
+
+  <footer>Verdicts come from exit codes and measurements inside a disposable Daytona sandbox. The LLM only proposes what to check. Results apply to this commit and this environment.</footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var pollTimer = null;
+
+  // Build DOM nodes safely: text is always set via textContent (receipt data is untrusted).
+  function el(tag, attrs, children) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'text') n.textContent = attrs[k];
+      else if (k === 'class') n.className = attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) {
+      if (c == null) return;
+      n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+  function str(v) { return v == null ? '' : String(v); }
+  var KNOWN = ['verified', 'refuted', 'inconclusive', 'not_checkable', 'runs', 'fails', 'not_started'];
+  function badge(v) {
+    var s = str(v) || 'unknown';
+    var cls = KNOWN.indexOf(s) >= 0 ? s : 'unknown';
+    return el('span', { class: 'badge b-' + cls, text: s.replace('_', ' ') });
+  }
+  function fmtMs(ms) {
+    if (typeof ms !== 'number' || !isFinite(ms)) return '—';
+    return ms >= 1000 ? (ms / 1000).toFixed(1) + ' s' : Math.round(ms) + ' ms';
+  }
+  function setStatus(msg, isErr) { var s = $('status'); s.textContent = msg || ''; s.className = isErr ? 'err' : ''; }
+  function busy(b) { $('verifyBtn').disabled = b; $('demoBtn').disabled = b; }
+
+  async function getJSON(url, opts) {
+    var r = await fetch(url, opts);
+    var txt = await r.text();
+    var data; try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = null; }
+    if (!r.ok) throw new Error((data && data.error) ? str(data.error) : ('HTTP ' + r.status));
+    return data;
+  }
+
+  async function start(body) {
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    busy(true); setStatus('Starting…');
+    $('log').textContent = ''; $('logSection').classList.remove('hidden');
+    $('receiptSection').classList.add('hidden');
+    try {
+      var res = await getJSON('/api/verify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res || !res.id) throw new Error('No run id returned');
+      setStatus('Running in sandbox… (run ' + str(res.id) + ')');
+      poll(res.id);
+    } catch (e) { setStatus('Could not start: ' + e.message, true); busy(false); }
+  }
+
+  function renderLog(events) {
+    var log = $('log');
+    var atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 20;
+    var t0 = events.length && typeof events[0].t === 'number' ? events[0].t : null;
+    log.textContent = events.map(function (ev) {
+      var ts = (t0 != null && typeof ev.t === 'number') ? ('+' + ((ev.t - t0) / 1000).toFixed(1) + 's').padStart(8) + '  ' : '';
+      return ts + str(ev && ev.msg);
+    }).join('\n');
+    if (atBottom) log.scrollTop = log.scrollHeight;
+  }
+
+  async function poll(id) {
+    try {
+      var run = await getJSON('/api/runs/' + encodeURIComponent(id));
+      renderLog(Array.isArray(run && run.events) ? run.events : []);
+      if (run.status === 'done') {
+        busy(false); setStatus('Done.');
+        if (run.receipt) renderReceipt(run.receipt);
+        loadPast(); return;
+      }
+      if (run.status === 'error') {
+        busy(false); setStatus('Run failed: ' + str(run.error || 'unknown error'), true);
+        if (run.receipt) renderReceipt(run.receipt);
+        loadPast(); return;
+      }
+    } catch (e) { setStatus('Polling error (retrying): ' + e.message, true); }
+    pollTimer = setTimeout(function () { poll(id); }, 1000);
+  }
+
+  function metaItem(label, value) { return el('div', null, [el('span', { text: label }), el('b', { text: value })]); }
+
+  function sourceText(src) {
+    if (!src) return '—';
+    if (src.kind === 'local') return 'local: ' + str(src.dir);
+    var s = str(src.url);
+    if (src.ref) s += ' @ ' + str(src.ref);
+    if (src.subdir) s += ' / ' + str(src.subdir);
+    return s || '—';
+  }
+
+  function evidenceCell(ev) {
+    if (!ev) return el('td', { class: 'muted', text: '—' });
+    var box = el('div', { class: 'ev' });
+    if (ev.cmd != null) box.appendChild(el('div', null, ['$ ', str(ev.cmd)]));
+    if (ev.exitCode != null) box.appendChild(el('div', { text: 'exit ' + str(ev.exitCode) }));
+    if (ev.observed != null) box.appendChild(el('div', { text: 'observed: ' + (typeof ev.observed === 'object' ? JSON.stringify(ev.observed) : str(ev.observed)) }));
+    var td = el('td', null, [box]);
+    if (ev.outputTail) td.appendChild(el('details', null, [el('summary', { text: 'output tail' }), el('pre', { class: 'tail', text: str(ev.outputTail) })]));
+    return td;
+  }
+
+  function renderReceipt(r) {
+    var root = $('receipt'); root.replaceChildren();
+    var app = r.app || {}, planner = r.planner || {}, sandbox = r.sandbox || {};
+    var appLine = el('div', { class: 'summary' }, ['App: ', badge(app.status || 'unknown'),
+      app.port ? el('span', { class: 'muted', text: '  port ' + str(app.port) }) : null,
+      app.reason ? el('span', { class: 'muted', text: '  — ' + str(app.reason) }) : null]);
+    root.appendChild(appLine);
+
+    var plannerText = str(planner.kind || '—');
+    if (planner.model) plannerText += ' · ' + str(planner.model);
+    if (planner.host) plannerText += ' @ ' + str(planner.host);
+    var meta = el('div', { class: 'meta' }, [
+      metaItem('Source', sourceText(r.source)),
+      metaItem('Commit', str(r.commit || '—')),
+      metaItem('Sandbox', str(sandbox.id || '—') + (sandbox.createMs != null ? ' (' + fmtMs(sandbox.createMs) + ' to create)' : '')),
+      metaItem('Planner', plannerText),
+      metaItem('Total time', fmtMs(r.totalMs))
+    ]);
+    if (planner.fallbackReason) meta.appendChild(metaItem('Planner fallback', str(planner.fallbackReason)));
+    root.appendChild(meta);
+
+    var sm = r.summary || {};
+    var n = function (k) { return typeof sm[k] === 'number' ? sm[k] : 0; };
+    root.appendChild(el('div', { class: 'summary', text:
+      n('verified') + ' verified · ' + n('refuted') + ' refuted · ' + n('inconclusive') + ' inconclusive · ' + n('not_checkable') + ' not checkable' }));
+
+    var tbody = el('tbody');
+    (Array.isArray(r.claims) ? r.claims : []).forEach(function (c) {
+      var kind = c && c.check && c.check.kind;
+      tbody.appendChild(el('tr', null, [
+        el('td', { class: 'claim', text: str(c.text) }),
+        el('td', null, [el('code', { text: str(kind || '—') })]),
+        el('td', null, [badge(c.verdict)]),
+        el('td', { text: str(c.reason) }),
+        evidenceCell(c.evidence)
+      ]));
+    });
+    if (!tbody.children.length) tbody.appendChild(el('tr', null, [el('td', { colspan: '5', class: 'muted', text: 'No claims extracted.' })]));
+    var head = el('thead', null, [el('tr', null, ['Claim', 'Check', 'Verdict', 'Reason', 'Evidence'].map(function (h) { return el('th', { text: h }); }))]);
+    root.appendChild(el('div', { class: 'table-wrap' }, [el('table', null, [head, tbody])]));
+
+    var steps = Array.isArray(r.steps) ? r.steps : [];
+    var stepBody = el('tbody');
+    steps.forEach(function (s) {
+      var tr = el('tr', null, [
+        el('td', { text: str(s.name) }),
+        el('td', null, [el('code', { text: str(s.cmd) })]),
+        el('td', { class: 'mono', text: str(s.exitCode) }),
+        el('td', { class: 'mono', text: fmtMs(s.ms) })
+      ]);
+      stepBody.appendChild(tr);
+      if (s.outputTail) stepBody.appendChild(el('tr', null, [el('td', { colspan: '4' }, [
+        el('details', null, [el('summary', { text: 'output tail' }), el('pre', { class: 'tail', text: str(s.outputTail) })])])]));
+    });
+    root.appendChild(el('details', null, [el('summary', { text: 'Steps (' + steps.length + ')' }),
+      el('div', { class: 'table-wrap' }, [el('table', null, [
+        el('thead', null, [el('tr', null, ['Step', 'Command', 'Exit', 'Time'].map(function (h) { return el('th', { text: h }); }))]),
+        stepBody])])]));
+
+    var sha = el('div', { class: 'sha' }, ['sha256: ', str(r.sha256 || '—'), '   ']);
+    if (r.id) sha.appendChild(el('a', { href: '/api/receipts/' + encodeURIComponent(str(r.id)), download: 'hackproof-' + str(r.id) + '.json', text: 'Download JSON' }));
+    root.appendChild(sha);
+
+    $('receiptSection').classList.remove('hidden');
+    $('receiptSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function loadPast() {
+    var ul = $('past');
+    try {
+      var list = await getJSON('/api/receipts');
+      ul.replaceChildren();
+      if (!Array.isArray(list) || !list.length) { ul.appendChild(el('li', { class: 'muted', text: 'No receipts yet.' })); return; }
+      list.forEach(function (it) {
+        var sm = it.summary || {};
+        var li = el('li', { tabindex: '0' }, [
+          badge(it.app && it.app.status ? it.app.status : (typeof it.app === 'string' ? it.app : 'unknown')),
+          el('span', { text: sourceText(it.source) }),
+          el('span', { class: 'mono muted', text: str(it.commit).slice(0, 12) }),
+          el('span', { class: 'muted', text: (sm.verified || 0) + '✓ ' + (sm.refuted || 0) + '✗ ' + (sm.inconclusive || 0) + '? ' + (sm.not_checkable || 0) + '–' }),
+          el('span', { class: 'muted', text: it.finishedAt ? new Date(it.finishedAt).toLocaleString() : '' })
+        ]);
+        var open = async function () {
+          try { setStatus('Loading receipt ' + str(it.id) + '…'); renderReceipt(await getJSON('/api/receipts/' + encodeURIComponent(str(it.id)))); setStatus(''); }
+          catch (e) { setStatus('Could not load receipt: ' + e.message, true); }
+        };
+        li.addEventListener('click', open);
+        li.addEventListener('keydown', function (e) { if (e.key === 'Enter') open(); });
+        ul.appendChild(li);
+      });
+    } catch (e) { ul.replaceChildren(el('li', { class: 'muted', text: 'Could not load receipts: ' + e.message })); }
+  }
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var repoUrl = $('repoUrl').value.trim();
+    if (!repoUrl) { setStatus('Enter a GitHub repo URL, or run the demo submission.', true); return; }
+    var body = { repoUrl: repoUrl };
+    var subdir = $('subdir').value.trim(), ref = $('ref').value.trim();
+    if (subdir) body.subdir = subdir;
+    if (ref) body.ref = ref;
+    start(body);
+  });
+  $('demoBtn').addEventListener('click', function () { start({ localDir: 'demo-submissions/acme-notes' }); });
+  loadPast();
+})();
+</script>
+</body>
+</html>
