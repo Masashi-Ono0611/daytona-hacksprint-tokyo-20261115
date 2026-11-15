@@ -20,4 +20,9 @@ mkdirSync(join(OUT, 'slides'), { recursive: true })
 copyFileSync('docs/slides/hackproof.pdf', join(OUT, 'slides', 'hackproof.pdf'))
 copyFileSync('docs/slides/hackproof.html', join(OUT, 'slides', 'index.html'))
 cpSync('docs/slides/assets', join(OUT, 'slides', 'assets'), { recursive: true })
+// AI-judge entry points on the public site: llms.txt with repo links made absolute
+const GH = 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115/blob/main/'
+const llms = readFileSync('llms.txt', 'utf8').replace(/\]\((?!https?:)([^)]+)\)/g, (_, p) => `](${GH}${p})`)
+writeFileSync(join(OUT, 'llms.txt'), llms)
+copyFileSync('docs/JUDGING.md', join(OUT, 'JUDGING.md'))
 console.log(`static site: ${list.length} receipts -> ${OUT}/`)
