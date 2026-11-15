@@ -168,7 +168,8 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
     mkdirSync(RECEIPTS_DIR, { recursive: true })
     writeFileSync(join(RECEIPTS_DIR, `${id}.json`), JSON.stringify(receipt, null, 2))
   } catch (e: any) {
-    log(`receipt not saved to disk (${String(e?.code ?? e?.message ?? e)}); returned to caller only`)
+    log(`receipt ${id} ready (sha256 ${sha256.slice(0, 12)}…); not saved to disk (${String(e?.code ?? e?.message ?? e)}), returned to caller only`)
+    return receipt
   }
   log(`receipt ${id} saved (sha256 ${sha256.slice(0, 12)}…)`)
   return receipt

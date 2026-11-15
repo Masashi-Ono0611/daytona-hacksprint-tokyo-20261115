@@ -6,8 +6,7 @@ Built at Daytona HackSprint Tokyo (2026-11-15).
 
 > **For judges (human or AI):** start with [`docs/JUDGING.md`](docs/JUDGING.md) — evidence for each judging criterion with links to code and real receipts. Machine-readable summary: [`llms.txt`](llms.txt).
 
-- **Live demo (temporary, during judging):** https://adds-servers-comparison-drive.trycloudflare.com — paste a GitHub repo, or press "Run demo submission". Each run creates a real Daytona sandbox.
-- **Public read-only site (always on):** https://hackproof-delta.vercel.app — the UI with our real saved receipts, plus the slides.
+- **Live app (always on):** https://hackproof-delta.vercel.app — paste a GitHub repo, or press "Run demo submission". Each run creates a real Daytona sandbox, Nosana plans the checks, and you get a receipt in about 10–40 s (a Vercel Function, `api/verify.ts`). The page also lists our saved receipts and links the slides and the demo video.
 - **Demo video (1:40):** https://youtu.be/oWG9ZQBE9ZU
 - **Slides:** [`docs/slides/hackproof.pdf`](docs/slides/hackproof.pdf)
 - **Latest live receipt (Nosana planner):** [`receipts/20261115065249-39e5cb.json`](receipts/20261115065249-39e5cb.json) — the README was read by `qwen/qwen3.8-27b` on Nosana, the checks ran in a Daytona sandbox: 3 verified · 1 refuted · 2 not checkable, 26.2 s.
