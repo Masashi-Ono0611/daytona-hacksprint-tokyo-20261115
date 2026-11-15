@@ -36,9 +36,12 @@ async function llmPlan(base: string, model: string | undefined, readme: string, 
   const headers: Record<string, string> = { 'content-type': 'application/json' }
   if (process.env.NOSANA_LLM_KEY) headers.authorization = `Bearer ${process.env.NOSANA_LLM_KEY}`
   const res = await fetch(`${base.replace(/\/$/, '')}/v1/chat/completions`, {
-    method: 'POST', headers, signal: AbortSignal.timeout(60_000),
+    // reasoning models spend tokens before answering: give room and time
+    method: 'POST', headers, signal: AbortSignal.timeout(120_000),
     body: JSON.stringify({
-      model, temperature: 0,
+      model, temperature: 0, max_tokens: 8000,
+      // Nosana hosted Qwen: thinking mode takes >120 s on a README; off, it answers in seconds
+      chat_template_kwargs: { enable_thinking: false },
       messages: [
         { role: 'system', content: PROMPT },
         { role: 'user', content: `FILES:\n${files.slice(0, 200).join('\n')}\n\nREADME:\n${readme.slice(0, 12000)}` },
@@ -48,6 +51,7 @@ async function llmPlan(base: string, model: string | undefined, readme: string, 
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const j: any = await res.json()
   const text: string = j?.choices?.[0]?.message?.content ?? ''
+  if (!text) throw new Error(`empty LLM content (finish_reason ${j?.choices?.[0]?.finish_reason ?? 'unknown'})`)
   return normalize(parseJson(text))
 }
 

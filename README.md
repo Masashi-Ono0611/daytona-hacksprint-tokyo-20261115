@@ -7,7 +7,7 @@ Built at Daytona HackSprint Tokyo (2026-11-15).
 - **Live demo (temporary, during judging):** https://adds-servers-comparison-drive.trycloudflare.com — paste a GitHub repo, or press "Run demo submission". Each run creates a real Daytona sandbox.
 - **Public read-only site (always on):** https://hackproof-delta.vercel.app — the UI with our real saved receipts, plus the slides.
 - **Slides:** [`docs/slides/hackproof.pdf`](docs/slides/hackproof.pdf)
-- **Latest live receipt:** [`receipts/20261115063134-4f4ace.json`](receipts/20261115063134-4f4ace.json) (GitHub `main` at `6b73204`: 3 verified · 1 refuted · 2 not checkable)
+- **Latest live receipt (Nosana planner):** [`receipts/20261115065249-39e5cb.json`](receipts/20261115065249-39e5cb.json) — the README was read by `qwen/qwen3.8-27b` on Nosana, the checks ran in a Daytona sandbox: 3 verified · 1 refuted · 2 not checkable, 26.2 s.
 
 ## Problem
 
@@ -63,7 +63,7 @@ Total time: 9.6 seconds. Sandbox creation: 0.6 seconds.
 | Partner | How we use it | Status |
 |---|---|---|
 | **Daytona** | Core of the product. One disposable sandbox per submission (`@daytonaio/sdk`): create, clone, run commands, detect the app port, measure, delete. The sandbox id and timings are in every receipt. | Working. Used in every run. |
-| **Nosana** | The planner can call an open model on a Nosana GPU (Ollama, `qwen2.5-coder:7b`, OpenAI-compatible API) to read the README and propose checks. Set `NOSANA_LLM_URL`. | Integrated in code. Our Nosana deployment was still starting during the event, so the run above used the built-in rule-based planner. The receipt records which planner was used (`planner.kind`). |
+| **Nosana** | The planner reads the README and proposes the install steps, start command and checkable claims, using Nosana hosted inference (`https://inference.nosana.com/v1`, OpenAI-compatible, model `qwen/qwen3.8-27b`, billed from Nosana credits). The model only proposes; allow-listed commands and execution results decide the verdict. Run it with `scripts/dev-nosana.sh` (key from the macOS keychain). | Working. The live demo uses it: see receipt `20261115065249-39e5cb` (`planner.kind = "nosana-llm"`). If Nosana is unreachable, HackProof falls back to the rule-based planner and the receipt says why (`planner.fallbackReason`). We also tried our own Ollama deployments on Nosana GPUs; the Ollama template could not register the model (read-only model folder), so we use the hosted endpoint. |
 
 ## Run it
 
