@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>HackProof</title>
+<style>
+@page { size: 1280px 720px; margin: 0 }
+:root {
+  --bg:#0b0f2a; --bg2:#120b2e; --bg3:#07142c; --panel:#141a3d; --panel2:#1b2250;
+  --fg:#eef2ff; --mut:#aab3d9; --cyan:#22e6ff; --mag:#ff3df2;
+  --ok:#39ff9a; --bad:#ff5c7a; --amb:#ffc53d; --na:#b7b9d6; --dark:#0b0f2a;
+  --round: "Arial Rounded MT Bold", "SF Pro Rounded", ui-rounded, "Nunito", "Trebuchet MS", system-ui, sans-serif;
+  --body: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing:border-box } html, body { margin:0; background:#000 }
+body { font-family:var(--round); color:var(--fg); -webkit-print-color-adjust:exact; print-color-adjust:exact }
+.slide { width:1280px; height:720px; position:relative; overflow:hidden; break-after:page; page-break-after:always; background-color:var(--bg);
+  background-image: linear-gradient(rgba(34,230,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(34,230,255,.07) 1px, transparent 1px),
+    radial-gradient(circle at 85% 20%, rgba(255,61,242,.18), transparent 45%), radial-gradient(circle at 10% 90%, rgba(34,230,255,.14), transparent 45%);
+  background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100% }
+.slide::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:50; background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 4px) }
+.slide:last-child { break-after:auto; page-break-after:auto }
+.bg-2 { background-color:var(--bg2) } .bg-3 { background-color:var(--bg3) }
+.wave { position:absolute; left:0; top:0; width:1280px; height:40px; display:block }
+.glitch { text-shadow: -3px 0 var(--mag), 3px 0 var(--cyan), 0 0 22px rgba(34,230,255,.35) }
+h1 { font-size:132px; line-height:.92; margin:0; letter-spacing:-3px }
+h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
+.lbl { font:700 17px/1 var(--mono); text-transform:uppercase; letter-spacing:4px; margin-bottom:12px; color:var(--cyan) }
+.lbl::before { content:"// " ; color:var(--mag) }
+.head { position:absolute; left:80px; top:54px }
+.chip { display:inline-block; background:var(--panel); border:3px solid var(--mag); border-radius:999px; padding:8px 18px; font-size:19px; box-shadow:0 0 14px rgba(255,61,242,.55) }
+.box { background:var(--panel); border:3px solid var(--cyan); border-radius:18px; box-shadow:5px 5px 0 var(--mag), 0 0 18px rgba(34,230,255,.35) }
+.txt { font-family:var(--body); font-weight:600 }
+.sticker { display:inline-block; border:3px solid; border-radius:12px; padding:8px 14px; font-size:19px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:center; color:var(--dark) }
+.s-ok{background:var(--ok); border-color:#b8ffd8; box-shadow:0 0 16px rgba(57,255,154,.7)}
+.s-bad{background:var(--bad); border-color:#ffc2cd; box-shadow:0 0 16px rgba(255,92,122,.7)}
+.s-amb{background:var(--amb); border-color:#ffe6a6; box-shadow:0 0 16px rgba(255,197,61,.7)}
+.s-na{background:var(--na); border-color:#e6e7f5; box-shadow:0 0 12px rgba(183,185,214,.5)}
+.s-cy{background:var(--cyan); border-color:#b5f7ff; box-shadow:0 0 16px rgba(34,230,255,.7)}
+/* ticker */
+.ticker { position:absolute; left:0; right:0; bottom:0; height:52px; background:#05071a; border-top:3px solid var(--mag); box-shadow:0 -4px 18px rgba(255,61,242,.45); color:var(--cyan); overflow:hidden; display:flex; align-items:center; z-index:5 }
+.ticker .track { white-space:nowrap; font:700 21px/1 var(--mono); letter-spacing:3px; animation:mq 18s linear infinite; text-shadow:0 0 8px rgba(34,230,255,.7) }
+@keyframes mq { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+/* animation */
+.pop { animation:pop .7s cubic-bezier(.3,1.5,.5,1) both }
+.d1{animation-delay:.1s}.d2{animation-delay:.3s}.d3{animation-delay:.5s}.d4{animation-delay:.7s}.d5{animation-delay:.9s}.d6{animation-delay:1.1s}.d7{animation-delay:1.3s}
+@keyframes pop { from { transform:scale(.4) translateY(30px); opacity:0 } to { transform:none; opacity:1 } }
+.bob { animation:bob 2.6s ease-in-out infinite }
+@keyframes bob { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-8px) } }
+.flick { animation:flick 4s steps(1) infinite }
+@keyframes flick { 0%,92%,100% { text-shadow:-3px 0 var(--mag), 3px 0 var(--cyan), 0 0 22px rgba(34,230,255,.35) } 94% { text-shadow:-8px 0 var(--mag), 6px 0 var(--cyan) } 96% { text-shadow:4px 0 var(--mag), -4px 0 var(--cyan) } }
+.wavepaw { animation:wp 1.2s ease-in-out infinite; transform-origin:236px 196px; transform-box:view-box }
+@keyframes wp { 0%,100% { transform:rotate(0) } 50% { transform:rotate(-18deg) } }
+@media print { * { animation:none !important; transition:none !important } }
+.pup { position:absolute; display:block; filter: drop-shadow(0 0 10px rgba(34,230,255,.75)) drop-shadow(0 0 3px rgba(255,61,242,.8)) }
+.say { position:absolute; background:var(--panel); border:3px solid var(--mag); border-radius:14px; padding:7px 14px; font-size:18px; box-shadow:0 0 14px rgba(255,61,242,.55); white-space:nowrap }
+/* browser frame */
+.frame { position:absolute; background:#05071a; border:3px solid var(--cyan); border-radius:14px; overflow:hidden; box-shadow:6px 6px 0 var(--mag), 0 0 24px rgba(34,230,255,.45) }
+.frame .bar { height:30px; display:flex; align-items:center; gap:7px; padding:0 12px; background:#0e1336; border-bottom:2px solid rgba(34,230,255,.5); font:600 13px/1 var(--mono); color:var(--mut) }
+.frame .bar i { width:10px; height:10px; border-radius:50%; display:block } .frame .bar i:nth-child(1){background:var(--bad)} .frame .bar i:nth-child(2){background:var(--amb)} .frame .bar i:nth-child(3){background:var(--ok)}
+.frame .bar span { margin-left:8px }
+.frame .shot { overflow:hidden; background:#fbf3e4 } .frame .shot img { display:block; width:100% }
+.callout { position:absolute; background:var(--panel); border:3px solid var(--amb); border-radius:14px; padding:10px 16px; font-size:20px; box-shadow:0 0 16px rgba(255,197,61,.5); z-index:3 }
+.callout.c-bad { border-color:var(--bad); box-shadow:0 0 16px rgba(255,92,122,.6) } .callout.c-na { border-color:var(--na); box-shadow:0 0 12px rgba(183,185,214,.5) } .callout.c-cy { border-color:var(--cyan); box-shadow:0 0 16px rgba(34,230,255,.55) }
+.callout small { display:block; font-family:var(--body); font-weight:600; font-size:15px; color:var(--mut); margin-top:3px }
+.lines { position:absolute; left:0; top:0; width:1280px; height:720px; pointer-events:none; z-index:2 }
+
+/* 1 title */
+.s1 .main { position:absolute; left:80px; top:110px; width:700px }
+.s1 .tag { font-size:38px; margin-top:28px; line-height:1.2 }
+.s1 .tag b { display:inline-block; margin-top:10px; background:var(--mag); color:var(--dark); border:3px solid #ffc4fa; border-radius:12px; padding:2px 14px; font-weight:400; box-shadow:0 0 18px rgba(255,61,242,.7) }
+.s1 .when { margin-top:34px; font-size:26px; color:var(--mut) }
+/* 2 problem */
+.s2 .list { position:absolute; left:80px; top:200px; width:640px; display:flex; flex-direction:column; gap:18px }
+.s2 .list .box { padding:14px 20px; font-size:25px; line-height:1.3 }
+.s2 .list .box b { color:var(--mag) }
+.s2 .readme { position:absolute; right:90px; top:150px; width:380px; padding:0; overflow:hidden }
+.s2 .readme .rb { background:#05071a; color:var(--cyan); font:600 16px/1 var(--mono); padding:12px 16px; border-bottom:2px solid var(--cyan) }
+.s2 .readme .q { padding:26px 22px 8px; font-size:34px; line-height:1.15 }
+.s2 .readme .who { padding:0 22px 22px; font-size:26px; color:var(--bad) }
+/* 3 how */
+.cards { position:absolute; left:80px; right:80px; top:200px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px }
+.card { background:var(--panel); border:3px solid var(--cyan); border-radius:22px; padding:18px 18px 20px; box-shadow:6px 6px 0 var(--mag), 0 0 18px rgba(34,230,255,.35); min-width:0; position:relative }
+.card .n { position:absolute; top:-24px; left:16px; width:48px; height:48px; border-radius:50%; background:var(--mag); color:var(--dark); border:3px solid #ffc4fa; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 0 14px rgba(255,61,242,.7) }
+.card .ic { display:block; height:56px; width:56px; margin:12px 0 6px }
+.card .t { font-size:33px }
+.card p { font-family:var(--body); font-weight:600; font-size:18px; line-height:1.35; margin:6px 0 0; color:var(--mut) }
+.card.hot { border-color:var(--ok); box-shadow:6px 6px 0 var(--mag), 0 0 24px rgba(57,255,154,.55) } .card.hot .t { color:var(--ok) }
+.s3 .rule { position:absolute; left:80px; top:530px; padding:10px 20px; font-size:26px }
+.s3 .verd { position:absolute; left:80px; top:600px; display:flex; gap:16px; align-items:center }
+.s3 .verd .sticker { font-size:16px; padding:6px 12px }
+/* 4 demo */
+.step { position:absolute; font:700 16px/1 var(--mono); letter-spacing:3px; color:var(--mag); text-transform:uppercase }
+/* 5 receipt */
+.s5 .stats { position:absolute; left:560px; top:150px; width:620px; padding:18px 22px }
+.s5 .stats .row1 { display:flex; flex-wrap:wrap; gap:10px }
+.s5 .stats .sticker { font-size:16px; padding:6px 10px }
+.s5 .stats .meta { margin-top:14px; font:600 16px/1.6 var(--mono); color:var(--mut) } .s5 .stats .meta b { color:var(--fg) }
+/* 6 measured */
+.s6 .sub { margin-top:12px; font-family:var(--body); font-weight:600; font-size:22px; color:var(--mut) }
+.s6 .grid { position:absolute; left:80px; right:80px; top:220px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:22px 28px }
+.s6 .box { padding:14px 20px; font-size:20px; line-height:1.35; color:var(--mut) }
+.s6 .big { font-family:var(--round); font-size:44px; line-height:1; display:block; margin-bottom:6px; color:var(--fg) }
+.s6 .law { position:absolute; left:80px; top:578px; padding:10px 22px; font-size:28px; border-color:var(--mag); color:var(--fg); box-shadow:5px 5px 0 var(--cyan), 0 0 18px rgba(255,61,242,.45) }
+/* 7 partner */
+.s7 .list { position:absolute; left:80px; width:690px; top:160px; display:flex; flex-direction:column; gap:16px }
+.s7 .it { padding:14px 20px }
+.s7 .it .sticker { font-size:17px; padding:5px 12px }
+.s7 .it p { margin:10px 0 0; font-family:var(--body); font-weight:600; font-size:18px; line-height:1.38; color:var(--mut) }
+.s7 .it p b { color:var(--fg); font-weight:800 }
+.s7 .shots { position:absolute; left:810px; right:60px; top:150px; height:470px }
+.s7 .shots .frame { position:relative; width:100%; margin-bottom:22px }
+.s7 .shots .frame img { display:block; width:100%; max-height:186px; object-fit:cover; object-position:top }
+/* 7 partner panels */
+.s7 .pan { position:absolute; top:150px; width:545px; height:462px; padding:20px 20px 16px }
+.s7 .logo { height:36px; display:flex; align-items:center; margin-bottom:14px }
+.s7 .logo img { height:34px; width:auto; display:block }
+.s7 .pan p { margin:0; font-family:var(--body); font-weight:600; font-size:18px; line-height:1.38; color:var(--mut); min-height:50px }
+.s7 .pan p b { color:var(--fg); font-weight:800 }
+.s7 .proof { position:relative; height:236px; margin-top:12px; border:2px solid rgba(34,230,255,.6); border-radius:10px; overflow:hidden; background:#0b0b0e }
+.s7 .proof .tagp { position:absolute; left:8px; top:8px; z-index:2; font-size:13px; padding:3px 8px; border-width:2px }
+.s7 .cap { margin-top:10px; font-family:var(--body); font-weight:600; font-size:15px; line-height:1.35; color:var(--mut) }
+.s7 .lim { position:absolute; left:80px; right:80px; top:624px; font-family:var(--body); font-weight:600; font-size:15px; color:var(--mut) }
+.s7 .lim b { color:var(--fg) }
+/* 8 judging */
+.jrows { position:absolute; left:80px; right:80px; top:160px; display:flex; flex-direction:column; gap:14px }
+.jrow { display:grid; grid-template-columns:60px 250px minmax(0,1fr); align-items:center; gap:18px; padding:14px 20px }
+.jrow .ck { width:52px; height:52px; border-radius:50%; background:var(--ok); color:var(--dark); display:flex; align-items:center; justify-content:center; font-size:30px; border:3px solid #b8ffd8; box-shadow:0 0 18px rgba(57,255,154,.75) }
+.jrow .nm { font-size:26px; color:var(--cyan); text-shadow:0 0 10px rgba(34,230,255,.6) }
+.jrow p { margin:0; font-family:var(--body); font-weight:600; font-size:19px; line-height:1.35; color:var(--mut) }
+.jrow p b { color:var(--fg) }
+/* 8 try */
+.s8 .main { position:absolute; left:80px; top:80px; width:860px }
+.s8 .repo { margin-top:26px; padding:16px 22px; font:700 19px/1.2 var(--mono); white-space:nowrap; display:inline-block }
+.s8 .cmds { margin-top:20px; display:flex; flex-direction:column; gap:12px }
+.s8 .cmd { background:#05071a; color:var(--ok); border:2px solid var(--ok); border-radius:12px; padding:14px 20px; font:700 24px/1.2 var(--mono); box-shadow:0 0 16px rgba(57,255,154,.45); width:fit-content }
+.s8 .cmd span { color:var(--fg); font-family:var(--body); font-weight:600; font-size:20px }
+.s8 .team { margin-top:24px; font-size:24px }
+.s8 .sign { margin-top:18px; font-size:40px }
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <!-- Proofy: an original puppy mascot drawn for this deck -->
+  <g id="pup-base">
+    <ellipse cx="150" cy="262" rx="76" ry="36" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="112" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <ellipse cx="188" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <circle cx="150" cy="140" r="92" fill="#f8e8d0" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="190" cy="122" rx="34" ry="30" fill="#e7c49c"/>
+    <ellipse cx="68" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(16 68 138)"/>
+    <ellipse cx="232" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(-16 232 138)"/>
+    <ellipse cx="150" cy="182" rx="46" ry="32" fill="#fffaf0"/>
+    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#2f2a3a"/>
+    <circle cx="94" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+    <circle cx="206" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+  </g>
+  <g id="f-happy">
+    <path d="M96 130 q16 -18 32 0 M172 130 q16 -18 32 0" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M140 190 q10 18 20 0 z" fill="#e98585" stroke="#2f2a3a" stroke-width="3"/>
+    <path d="M150 176 v8 M150 184 q-12 10 -22 0 M150 184 q12 10 22 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g id="f-shock">
+    <circle cx="112" cy="128" r="21" fill="#fff" stroke="#2f2a3a" stroke-width="5"/><circle cx="112" cy="131" r="11" fill="#2f2a3a"/><circle cx="116" cy="126" r="4" fill="#fff"/>
+    <circle cx="188" cy="128" r="21" fill="#fff" stroke="#2f2a3a" stroke-width="5"/><circle cx="188" cy="131" r="11" fill="#2f2a3a"/><circle cx="192" cy="126" r="4" fill="#fff"/>
+    <ellipse cx="150" cy="198" rx="10" ry="13" fill="#2f2a3a"/>
+    <path d="M246 70 q12 18 0 26 q-12 -8 0 -26 z" fill="#b3d3e2" stroke="#2f2a3a" stroke-width="3"/>
+  </g>
+  <g id="f-puzzle">
+    <circle cx="112" cy="130" r="13" fill="#2f2a3a"/><circle cx="116" cy="125" r="4" fill="#fff"/>
+    <path d="M176 132 h26" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M172 104 l32 -10" stroke="#2f2a3a" stroke-width="6" stroke-linecap="round"/>
+    <path d="M132 196 q9 -9 18 0 t18 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+    <text x="242" y="74" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="64" fill="#2f2a3a">?</text>
+  </g>
+  <g id="f-shrug">
+    <path d="M98 128 h28 M174 128 h28" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M96 118 q15 -8 30 0 M174 118 q15 -8 30 0" fill="none" stroke="#2f2a3a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M136 194 h28" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+    <path d="M86 248 Q50 236 40 206 M214 248 Q250 236 260 206" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="40" cy="200" r="16" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <circle cx="260" cy="200" r="16" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+  </g>
+  <g id="p-receipt">
+    <g transform="rotate(14 196 206)"><rect x="166" y="186" width="66" height="44" rx="4" fill="#fff" stroke="#2f2a3a" stroke-width="4"/><path d="M176 199 h46 M176 210 h36 M176 221 h26" stroke="#2f2a3a" stroke-width="3" stroke-linecap="round"/></g>
+  </g>
+  <g id="p-glass">
+    <line x1="230" y1="250" x2="210" y2="272" stroke="#2f2a3a" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="250" cy="228" r="27" fill="#d8ecf3" fill-opacity=".85" stroke="#2f2a3a" stroke-width="7"/>
+    <path d="M238 216 q6 -6 14 -6" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="212" cy="268" r="14" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+  </g>
+  <g id="p-wave">
+    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="254" cy="178" r="17" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+  </g>
+  <g id="i-read"><rect x="12" y="4" width="46" height="62" rx="8" fill="#f5e2a8" stroke="#2f2a3a" stroke-width="5"/><path d="M22 22 H48 M22 34 H48 M22 46 H38" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/></g>
+  <g id="i-gate"><path d="M35 4 L62 14 V36 Q62 58 35 66 Q8 58 8 36 V14 Z" fill="#b3d3e2" stroke="#2f2a3a" stroke-width="5"/><path d="M22 36 L32 46 L50 26" fill="none" stroke="#2f2a3a" stroke-width="6" stroke-linecap="round"/></g>
+  <g id="i-run"><rect x="4" y="10" width="62" height="50" rx="10" fill="#fffaf0" stroke="#2f2a3a" stroke-width="5"/><path d="M16 28 L26 36 L16 44 M32 46 H50" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/></g>
+  <g id="i-rec"><path d="M12 4 H58 V66 L50 60 L42 66 L35 60 L28 66 L20 60 L12 66 Z" fill="#fffaf0" stroke="#2f2a3a" stroke-width="5" stroke-linejoin="round"/><path d="M22 20 H48 M22 32 H48 M22 44 H40" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/></g>
+  <g id="p-headset">
+    <path d="M64 112 Q150 6 236 112" fill="none" stroke="#ff3df2" stroke-width="9" stroke-linecap="round"/>
+    <rect x="224" y="98" width="26" height="44" rx="9" fill="#1b2250" stroke="#22e6ff" stroke-width="4"/>
+    <path d="M236 142 Q232 186 196 198" fill="none" stroke="#22e6ff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="194" cy="198" r="7" fill="#ff3df2" stroke="#22e6ff" stroke-width="3"/>
+  </g>
+</defs>
+</svg>
+
+<!-- 1 · Title -->
+<section class="slide s1">
+  <div class="main">
+    <div class="pop d1"><span class="chip">Daytona HackSprint Tokyo · 2026-11-15</span></div>
+    <h1 class="glitch flick pop d2" style="margin-top:26px">HackProof</h1>
+    <div class="tag pop d3">Receipts for hackathon claims.<br><b>Don't trust the README. Run it.</b></div>
+    <p class="when txt pop d4">It runs the repo. It checks each claim. It gives you a receipt.</p>
+  </div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:70px;top:80px;width:400px;height:413px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/><use href="#p-receipt"/><use href="#p-glass"/></svg>
+  <div class="say pop d5" style="right:330px;top:96px">Hi! I'm Proofy.</div>
+  <div class="sticker s-ok pop d6" style="position:absolute;right:300px;top:470px;rotate:-6deg;font-size:24px">✓ Verified</div>
+  <div class="ticker"><div class="track">DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT ·</div></div>
+</section>
+
+<!-- 2 · Problem -->
+<section class="slide s2 bg-2">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head"><div class="lbl pop d1">Problem</div><h2 class="glitch pop d1">Judges can't run every repo.</h2></div>
+  <div class="list">
+    <div class="box txt pop d2">Judges get many projects and <b>3 minutes each</b>.</div>
+    <div class="box txt pop d3">They cannot run every repo.</div>
+    <div class="box txt pop d4">So a confident README can beat software that really works.</div>
+  </div>
+  <div class="readme box pop d3"><div class="rb">README.md</div><div class="q">"All tests pass"</div><div class="who">— who checked?</div></div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:150px;top:330px;width:240px;height:248px"><use href="#pup-base"/><use href="#f-puzzle"/><use href="#p-headset"/><use href="#p-glass"/></svg>
+  <div class="ticker"><div class="track">WHO CHECKED? · DON'T TRUST THE README · RUN IT · WHO CHECKED? · DON'T TRUST THE README · RUN IT · WHO CHECKED? · DON'T TRUST THE README · RUN IT · WHO CHECKED? · DON'T TRUST THE README · RUN IT · WHO CHECKED? · DON'T TRUST THE README · RUN IT ·</div></div>
+</section>
+
+<!-- 3 · How it works -->
+<section class="slide s3 bg-3">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head"><div class="lbl pop d1">How it works</div><h2 class="glitch pop d1">Read → Gate → Run → Receipt</h2></div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:20px;width:160px;height:165px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/><use href="#p-glass"/></svg>
+  <div class="cards">
+    <div class="card pop d1"><div class="n">1</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-read"/></svg><div class="t">Read</div><p>It reads the README.</p><p>A planner suggests how to run it and which claims to check.</p></div>
+    <div class="card pop d2"><div class="n">2</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-gate"/></svg><div class="t">Gate</div><p>Only allow-listed commands run.</p><p>README text never becomes a free command.</p></div>
+    <div class="card hot pop d3"><div class="n">3</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-run"/></svg><div class="t">Run</div><p>One new Daytona sandbox per submission.</p><p>No secrets inside. Deleted after.</p></div>
+    <div class="card pop d4"><div class="n">4</div><svg class="ic" viewBox="0 0 70 70"><use href="#i-rec"/></svg><div class="t">Receipt</div><p>Command, exit code, measured value, commit, sandbox id, SHA-256.</p></div>
+  </div>
+  <div class="rule box pop d5">Exit codes and measurements decide. Not an LLM.</div>
+  <div class="verd pop d6"><span class="sticker s-ok">✓ Verified</span><span class="sticker s-bad">✗ Refuted</span><span class="sticker s-amb">? Inconclusive</span><span class="sticker s-na">– Not checkable</span></div>
+  <div class="ticker"><div class="track">READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT · READ · GATE · RUN · RECEIPT ·</div></div>
+</section>
+
+<!-- 4 · Live demo -->
+<section class="slide s4">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head" style="top:46px"><div class="lbl pop d1">Live demo</div><h2 class="glitch pop d1">Live demo: paste a repo</h2></div>
+  <div class="step" style="left:80px;top:164px">1 · Paste a GitHub URL</div>
+  <div class="frame pop d2" style="left:80px;top:190px;width:500px"><div class="bar"><i></i><i></i><i></i><span>HackProof web UI</span></div><div class="shot" style="height:142px"><img src="assets/02-filled.png" alt="HackProof form with a GitHub repo URL"></div></div>
+  <div class="step" style="left:630px;top:154px">2 · Watch it run</div>
+  <div class="frame pop d3" style="left:630px;top:180px;width:570px"><div class="bar"><i></i><i></i><i></i><span>Live log</span></div><div class="shot" style="height:324px"><img src="assets/03-running.png" alt="HackProof live log while a Daytona sandbox runs"></div></div>
+  <svg class="lines" viewBox="0 0 1280 720"><g stroke-width="3" fill="none" stroke-dasharray="6 5"><path d="M470 405 H700 V420" stroke="#22e6ff"/><path d="M470 485 H760 V445" stroke="#ffc53d"/></g></svg>
+  <div class="callout c-cy pop d4" style="left:80px;top:378px;width:390px">Fresh Daytona sandbox in 0.6 s<small>log: "ready in 618 ms"</small></div>
+  <div class="callout pop d5" style="left:80px;top:462px;width:390px">clone → install → start<small>each step with its exit code</small></div>
+  <div class="callout c-na pop d6" style="left:80px;top:546px;width:390px">No secrets inside the sandbox<small>deleted after the run</small></div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="left:1060px;top:520px;width:130px;height:134px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
+  <div class="ticker"><div class="track">PASTE · RUN · WATCH · RECEIPT · PASTE · RUN · WATCH · RECEIPT · PASTE · RUN · WATCH · RECEIPT · PASTE · RUN · WATCH · RECEIPT · PASTE · RUN · WATCH · RECEIPT · PASTE · RUN · WATCH · RECEIPT ·</div></div>
+</section>
+
+<!-- 5 · The receipt -->
+<section class="slide s5 bg-2">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head" style="top:46px"><div class="lbl pop d1">Evidence</div><h2 class="glitch pop d1">The receipt</h2></div>
+  <div class="frame pop d2" style="left:80px;top:130px;width:420px"><div class="bar"><i></i><i></i><i></i><span>Receipt · acme-notes</span></div><div class="shot"><img src="assets/08-receipt-full.png" alt="Full HackProof receipt for the acme-notes demo"></div></div>
+  <div class="stats box pop d3">
+    <div class="row1"><span class="sticker s-ok">3 verified</span><span class="sticker s-bad">1 refuted</span><span class="sticker s-amb">0 inconclusive</span><span class="sticker s-na">2 not checkable</span></div>
+    <div class="meta">App: <b>RUNS</b> · total <b>10.0 s</b> · sandbox ready in <b>618 ms</b><br>p50 latency <b>0.6 ms</b> (inside the sandbox)<br>commit <b>39b8b58</b> · sandbox <b>424a470d</b> · sha256 <b>2af701b6…</b></div>
+  </div>
+  <svg class="lines" viewBox="0 0 1280 720"><g stroke-width="3" fill="none"><path d="M360 508 H560" stroke="#ff5c7a"/><circle cx="360" cy="508" r="6" fill="#ff5c7a"/><path d="M330 575 H560" stroke="#b7b9d6"/><circle cx="330" cy="575" r="6" fill="#b7b9d6"/></g></svg>
+  <div class="callout c-bad pop d4" style="left:560px;top:470px;width:400px">README says 12 tests.<br>We counted 6.<small>→ REFUTED</small></div>
+  <div class="callout c-na pop d5" style="left:560px;top:572px;width:400px">Needs a secret / real users<small>→ NOT CHECKABLE (not pass, not fail)</small></div>
+  <svg class="pup" viewBox="0 0 300 310" style="left:1040px;top:478px;width:160px;height:165px"><use href="#pup-base"/><use href="#f-shock"/><use href="#p-headset"/></svg>
+  <div class="say pop d5" style="left:1010px;top:470px;font-size:16px">Only 6, not 12!</div>
+  <div class="note txt" style="position:absolute;left:560px;top:410px;width:420px;font-size:16px;color:var(--mut)">Demo project acme-notes has one false claim on purpose.</div>
+  <div class="ticker"><div class="track">3 VERIFIED · 1 REFUTED · 0 INCONCLUSIVE · 2 NOT CHECKABLE · 3 VERIFIED · 1 REFUTED · 0 INCONCLUSIVE · 2 NOT CHECKABLE · 3 VERIFIED · 1 REFUTED · 0 INCONCLUSIVE · 2 NOT CHECKABLE ·</div></div>
+</section>
+
+<!-- 6 · What we measured first -->
+<section class="slide s6 bg-3">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head"><div class="lbl pop d1">Evidence</div><h2 class="glitch pop d1">What we measured first</h2><p class="sub pop d2">We ran 10 recent public hackathon repos in Daytona first.</p></div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:70px;top:24px;width:180px;height:186px"><use href="#pup-base"/><use href="#f-puzzle"/><use href="#p-headset"/></svg>
+  <div class="grid">
+    <div class="box txt pop d2"><span class="big">1 of 10</span>Guessing the start command: only 1 of 10 came up.</div>
+    <div class="box txt pop d3"><span class="big">README helps</span>Following the README: much better. Of 5 repos, 2 served, 1 passed tests, 2 failed.</div>
+    <div class="box txt pop d4"><span class="big">30 of 31</span>One README said "31 checks". We got 30 of 31. Likely the Python version → <span class="sticker s-amb" style="font-size:14px;padding:3px 8px">? Inconclusive</span>, with the reason.</div>
+    <div class="box txt pop d5"><span class="big">Controls</span>Our first test harness had false positives. We added controls and threw those numbers away.</div>
+  </div>
+  <div class="law box pop d6">"Unknown is never turned into pass or fail."</div>
+  <div class="ticker"><div class="track">MEASURE FIRST · UNKNOWN STAYS UNKNOWN · MEASURE FIRST · UNKNOWN STAYS UNKNOWN · MEASURE FIRST · UNKNOWN STAYS UNKNOWN · MEASURE FIRST · UNKNOWN STAYS UNKNOWN · MEASURE FIRST · UNKNOWN STAYS UNKNOWN ·</div></div>
+</section>
+
+<!-- 7 · Partner tech & limits -->
+<section class="slide s7">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head" style="top:50px"><div class="lbl pop d1">Partner tech</div><h2 class="glitch pop d1">How we use partner tech</h2></div>
+  <div class="pan box pop d2" style="left:80px">
+    <div class="logo"><img src="assets/logo-daytona-white.png" alt="Daytona"></div>
+    <p><b>Core.</b> One disposable sandbox per submission: create → clone → install → start → measure → delete.</p>
+    <div class="proof"><span class="sticker s-ok tagp">Proof</span><img src="assets/daytona-dashboard.png" alt="Daytona audit log with create and delete sandbox events" style="position:absolute;right:0;bottom:0;width:656px;height:auto" onerror="this.style.display='none'"></div>
+    <div class="cap">Real audit log: every run creates and deletes a sandbox (104 events today).</div>
+  </div>
+  <div class="pan box pop d3" style="left:655px">
+    <div class="logo"><img src="assets/logo-nosana.svg" alt="Nosana" style="height:30px"></div>
+    <p><b>Planner model on a Nosana GPU</b> (Ollama qwen2.5-coder:7b, OpenAI-compatible API).</p>
+    <div class="proof" style="display:flex;justify-content:center"><span class="sticker s-ok tagp">Proof</span><img src="assets/nosana-deployment.png" alt="Nosana deployment on an RTX 3060 Ti" style="height:100%;width:auto;display:block" onerror="this.style.display='none'"></div>
+    <div class="cap">Our deployment on an RTX 3060 Ti. It was still starting during the event, so today's runs used the rule-based planner. The receipt records which planner ran.</div>
+  </div>
+  <p class="lim"><b>Limits:</b> true for one commit and one environment. Secrets, GPUs, real users → not checkable. Real use needs participant consent and an appeal path.</p>
+  <div class="ticker"><div class="track">DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS ·</div></div>
+</section>
+
+<!-- 8 · Judging criteria -->
+<section class="slide s8j bg-2">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="head" style="top:50px"><div class="lbl pop d1">Judging criteria</div><h2 class="glitch pop d1">How we meet the judging criteria</h2></div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:20px;width:130px;height:134px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
+  <div class="jrows">
+    <div class="jrow box pop d2"><span class="ck">✓</span><span class="nm">Innovation</span><p><b>Receipts, not opinions.</b> The verdict comes from exit codes and measurements, not from an LLM.</p></div>
+    <div class="jrow box pop d3"><span class="ck">✓</span><span class="nm">Completeness</span><p><b>It works end to end today:</b> paste a GitHub repo → Daytona sandbox → verdicts → receipt in about 10 seconds. Web UI + CLI.</p></div>
+    <div class="jrow box pop d4"><span class="ck">✓</span><span class="nm">Real-life problem</span><p><b>Judges cannot run every project.</b> HackProof checks what a README claims, and says what it cannot check.</p></div>
+    <div class="jrow box pop d5"><span class="ck">✓</span><span class="nm">Sponsor usage</span><p><b>Daytona runs every check</b> (sandbox per submission). Nosana GPU planner is integrated in code.</p></div>
+  </div>
+  <div class="ticker"><div class="track">INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE · INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE · INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE ·</div></div>
+</section>
+
+<!-- 8 · Try it -->
+<section class="slide s8 bg-3">
+  <svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#05071a" stroke="#22e6ff" stroke-width="2"/></svg>
+  <div class="main">
+    <div class="lbl pop d1">Try it</div>
+    <h2 class="glitch pop d1" style="font-size:72px">Try HackProof</h2>
+    <div class="repo box pop d2">github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115</div>
+    <div class="cmds">
+      <div class="cmd pop d3">$ npm run verify -- &lt;repo&gt;</div>
+      <div class="cmd pop d4">$ npm run dev <span>→ web UI</span></div>
+    </div>
+    <div class="team pop d5"><!--TEAM--></div>
+    <p class="sign glitch pop d6">Don't trust the README. Run it.</p>
+  </div>
+  <svg class="pup bob" viewBox="0 0 300 310" style="right:50px;top:170px;width:330px;height:341px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/><g class="wavepaw"><use href="#p-wave"/></g></svg>
+  <div class="say pop d5" style="right:120px;top:100px">Bye! Run it!</div>
+  <div class="ticker"><div class="track">DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT · DON'T TRUST THE README · RUN IT ·</div></div>
+</section>
+</body></html>

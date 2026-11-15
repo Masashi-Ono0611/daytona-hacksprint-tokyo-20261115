@@ -4,77 +4,125 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HackProof</title>
+<link rel="icon" href="data:,">
 <style>
   :root {
-    --bg: #0d1117; --panel: #161b22; --panel2: #1f2630; --line: #30363d;
-    --text: #f0f3f6; --muted: #9da7b3; --accent: #58a6ff;
-    --green: #2ea043; --red: #da3633; --amber: #d29922; --grey: #6e7681;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --ink:#2f2a3a; --ink2:#5a5366; --cream:#fbf3e4; --butter:#f5e2a8; --sky:#b3d3e2; --rose:#e9bfc2;
+    --sagebg:#d3e4cc; --paper:#fffaf0; --ok:#a5c99d; --bad:#ee9c8c; --amb:#f1c46e; --na:#d8d0c6; --pink:#d98b95;
+    --line:#e6dccb; --term:#2f2a3a; --termtext:#f5ecd9;
+    --round: "Arial Rounded MT Bold", "SF Pro Rounded", ui-rounded, "Nunito", "Trebuchet MS", system-ui, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-    font: 20px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 1280px; margin: 0 auto; padding: 32px 24px 64px; }
-  h1 { font-size: 44px; margin: 0 0 4px; letter-spacing: -0.5px; }
-  h2 { font-size: 28px; margin: 0 0 16px; }
-  .tagline { font-size: 24px; color: var(--muted); margin: 0 0 28px; }
-  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-  form { display: grid; grid-template-columns: 1fr 220px 180px; gap: 12px; }
-  label { display: block; font-size: 16px; color: var(--muted); margin-bottom: 4px; }
-  input { width: 100%; font: inherit; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line);
-    background: var(--bg); color: var(--text); }
-  input:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
-  .actions { grid-column: 1 / -1; display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
-  button { font: inherit; font-weight: 600; padding: 12px 22px; border-radius: 8px; border: 1px solid var(--line);
-    background: var(--panel2); color: var(--text); cursor: pointer; }
-  button.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
-  button:disabled { opacity: .5; cursor: progress; }
-  #status { margin-top: 12px; color: var(--muted); min-height: 1.5em; }
-  #status.err { color: #ff7b72; }
-  #log { font: 16px/1.45 var(--mono); background: #010409; border: 1px solid var(--line); border-radius: 8px;
-    padding: 14px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
-  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 24px; margin-bottom: 20px; }
-  .meta div span { display: block; font-size: 15px; color: var(--muted); }
-  .meta div b { font: 600 19px var(--mono); word-break: break-all; }
-  .badge { display: inline-block; padding: 3px 12px; border-radius: 999px; font: 700 16px system-ui, sans-serif;
-    color: #fff; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
-  .b-verified, .b-runs { background: var(--green); }
-  .b-refuted, .b-fails { background: var(--red); }
-  .b-inconclusive { background: var(--amber); color: #111; }
-  .b-not_checkable, .b-not_started, .b-unknown { background: var(--grey); }
-  .summary { font-size: 24px; font-weight: 600; margin: 8px 0 16px; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { text-align: left; vertical-align: top; padding: 12px 10px; border-top: 1px solid var(--line); }
-  th { font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; border-top: none; }
-  td.claim { font-weight: 600; }
-  code, .mono { font-family: var(--mono); font-size: 16px; }
-  .ev div { font: 16px/1.4 var(--mono); word-break: break-word; }
-  details { margin-top: 6px; }
-  summary { cursor: pointer; color: var(--accent); }
-  pre.tail { font: 14px/1.4 var(--mono); background: #010409; border: 1px solid var(--line); border-radius: 6px;
-    padding: 10px; max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
-  .sha { font: 15px var(--mono); color: var(--muted); word-break: break-all; margin-top: 16px; }
-  a { color: var(--accent); }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 18px/1.5 var(--body); }
+  .topband { background: var(--butter); border-bottom: 0; }
+  .topband .inner { max-width: 1320px; margin: 0 auto; padding: 22px 32px 14px; display: flex; align-items: center; gap: 22px; }
+  .wave { display: block; width: 100%; height: 22px; }
+  main { max-width: 1320px; margin: 0 auto; padding: 20px 32px 56px; }
+  .pup { width: 84px; height: 87px; flex: none; }
+  h1 { font: 400 40px/1.05 var(--round); margin: 0 0 6px; letter-spacing: -.5px; }
+  h1 .sub { font-size: 24px; color: var(--ink2); letter-spacing: 0; }
+  h2 { font: 400 26px/1.2 var(--round); margin: 0 0 16px; }
+  .tagline { margin: 0; }
+  .tagline span { display: inline-block; font: 400 18px/1 var(--round); background: var(--pink); color: var(--paper);
+    border: 3px solid var(--ink); border-radius: 12px; padding: 6px 12px; box-shadow: 3px 3px 0 var(--ink); }
+  section { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; padding: 24px 26px;
+    margin-bottom: 24px; box-shadow: 5px 5px 0 var(--ink); }
+  form { display: grid; grid-template-columns: 1fr 240px 180px; gap: 14px; }
+  label { display: block; font: 400 15px var(--round); color: var(--ink2); margin-bottom: 6px; letter-spacing: .3px; }
+  input { width: 100%; font: 18px var(--body); padding: 12px 14px; border-radius: 12px; border: 3px solid var(--ink);
+    background: #fff; color: var(--ink); }
+  input::placeholder { color: #a69f94; }
+  input:focus { outline: 3px solid var(--sky); outline-offset: 2px; }
+  .actions { grid-column: 1 / -1; display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+  button { font: 400 18px var(--round); padding: 12px 22px; border-radius: 14px; border: 3px solid var(--ink);
+    background: var(--sky); color: var(--ink); cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+    transition: transform .08s, box-shadow .08s; }
+  button:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+  button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  button.primary { background: var(--ok); }
+  button:disabled { opacity: .55; cursor: progress; }
+  #status { margin-top: 14px; color: var(--ink2); min-height: 1.5em; font-weight: 600; }
+  #status.err { color: #b4535f; }
+  #log { font: 15px/1.55 var(--mono); background: var(--term); color: var(--termtext); border-radius: 12px;
+    padding: 16px 18px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
+  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 28px; margin: 4px 0 22px;
+    padding: 16px 18px; background: var(--cream); border-radius: 14px; }
+  .meta div span { display: block; font: 400 14px var(--round); color: var(--ink2); letter-spacing: .3px; }
+  .meta div b { font: 600 16px var(--mono); word-break: break-all; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font: 400 15px/1.3 var(--round);
+    color: var(--ink); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); text-transform: uppercase;
+    letter-spacing: .5px; white-space: nowrap; animation: pop .35s cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes pop { from { transform: scale(.7); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .badge { animation: none; } }
+  .b-verified, .b-runs { background: var(--ok); }
+  .b-refuted, .b-fails { background: var(--bad); }
+  .b-inconclusive { background: var(--amb); }
+  .b-not_checkable, .b-not_started, .b-unknown { background: var(--na); }
+  .summary { font: 400 30px/1.3 var(--round); margin: 6px 0 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .summary .muted { font: 600 18px var(--body); }
+  .summary .badge { font-size: 18px; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  th, td { text-align: left; vertical-align: top; padding: 16px 14px; border-top: 2px solid var(--line); }
+  th { font: 400 14px var(--round); color: var(--ink2); text-transform: uppercase; letter-spacing: 1px; border-top: none; padding-bottom: 10px; }
+  tbody tr:nth-child(even) td { background: #fdf6ea; }
+  td.claim { font-weight: 700; }
+  code, .mono { font-family: var(--mono); font-size: 15px; }
+  td code { background: var(--cream); border-radius: 6px; padding: 2px 6px; }
+  .ev div { font: 14px/1.5 var(--mono); word-break: break-word; }
+  details { margin-top: 8px; }
+  summary { cursor: pointer; color: #3d6f88; font-weight: 600; }
+  pre.tail { font: 13px/1.45 var(--mono); background: var(--term); color: var(--termtext); border-radius: 10px;
+    padding: 12px; max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+  .sha { font: 14px var(--mono); color: var(--ink2); word-break: break-all; margin-top: 18px; }
+  a { color: #3d6f88; font-weight: 600; }
   ul.past { list-style: none; margin: 0; padding: 0; }
-  ul.past li { padding: 12px 8px; border-top: 1px solid var(--line); cursor: pointer; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-  ul.past li:hover, ul.past li:focus { background: var(--panel2); outline: none; }
-  .muted { color: var(--muted); }
-  footer { color: var(--muted); font-size: 17px; border-top: 1px solid var(--line); padding-top: 16px; }
+  ul.past li { padding: 14px 10px; border-top: 2px solid var(--line); cursor: pointer; display: flex; gap: 18px; flex-wrap: wrap; align-items: center; border-radius: 10px; }
+  ul.past li:first-child { border-top: none; }
+  ul.past li:hover, ul.past li:focus { background: var(--cream); outline: none; }
+  .muted { color: var(--ink2); }
+  footer { color: var(--ink2); font-size: 16px; padding: 14px 4px 0; }
   .hidden { display: none; }
   @media (max-width: 760px) {
-    body { font-size: 17px; } h1 { font-size: 32px; }
+    body { font-size: 16px; } h1 { font-size: 28px; } .pup { width: 56px; height: 58px; }
     form { grid-template-columns: 1fr; }
-    main { padding: 20px 16px 40px; }
+    main, .topband .inner { padding-left: 16px; padding-right: 16px; }
     .table-wrap { overflow-x: auto; }
   }
 </style>
 </head>
 <body>
+<header class="topband">
+  <div class="inner">
+    <svg class="pup" viewBox="0 0 300 310" role="img" aria-label="Proofy the puppy"><defs>
+    <g id="pup-base">
+    <ellipse cx="150" cy="262" rx="76" ry="36" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="112" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <ellipse cx="188" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <circle cx="150" cy="140" r="92" fill="#f8e8d0" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="190" cy="122" rx="34" ry="30" fill="#e7c49c"/>
+    <ellipse cx="68" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(16 68 138)"/>
+    <ellipse cx="232" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(-16 232 138)"/>
+    <ellipse cx="150" cy="182" rx="46" ry="32" fill="#fffaf0"/>
+    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#2f2a3a"/>
+    <circle cx="94" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+    <circle cx="206" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+  </g>
+  <g id="f-happy">
+    <path d="M96 130 q16 -18 32 0 M172 130 q16 -18 32 0" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M140 190 q10 18 20 0 z" fill="#e98585" stroke="#2f2a3a" stroke-width="3"/>
+    <path d="M150 176 v8 M150 184 q-12 10 -22 0 M150 184 q12 10 22 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+  </g>
+    </defs><use href="#pup-base"/><use href="#f-happy"/></svg>
+    <div>
+      <h1>HackProof <span class="sub">— receipts for hackathon claims</span></h1>
+      <p class="tagline"><span>Don't trust the README. Run it.</span></p>
+    </div>
+  </div>
+</header>
+<svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#f5e2a8"/></svg>
 <main>
-  <header>
-    <h1>HackProof — receipts for hackathon claims</h1>
-    <p class="tagline">Don't trust the README. Run it.</p>
-  </header>
 
   <section>
     <form id="form" autocomplete="off">

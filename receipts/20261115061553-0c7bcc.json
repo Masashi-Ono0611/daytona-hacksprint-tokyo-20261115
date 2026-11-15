@@ -1,0 +1,150 @@
+{
+  "id": "20261115061553-0c7bcc",
+  "source": {
+    "kind": "git",
+    "url": "https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115",
+    "ref": "feat/hackproof-mvp",
+    "subdir": "demo-submissions/acme-notes"
+  },
+  "commit": "39b8b58470650ff52b3471b58efb23dab656a2f9",
+  "startedAt": "2026-11-15T06:15:53.725Z",
+  "finishedAt": "2026-11-15T06:16:03.738Z",
+  "totalMs": 10013,
+  "sandbox": {
+    "id": "424a470d-9f76-4cc2-a366-8bd36d9ece8f",
+    "createMs": 618
+  },
+  "planner": {
+    "kind": "heuristic"
+  },
+  "steps": [
+    {
+      "name": "clone",
+      "cmd": "git clone --depth 1 --branch 'feat/hackproof-mvp' 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115' app",
+      "exitCode": 0,
+      "ms": 1423,
+      "outputTail": "Cloning into 'app'...\n"
+    },
+    {
+      "name": "install",
+      "cmd": "npm install --no-audit --no-fund --loglevel=error",
+      "exitCode": 0,
+      "ms": 606,
+      "outputTail": "\nup to date in 321ms\n"
+    },
+    {
+      "name": "start",
+      "cmd": "nohup sh -c 'PORT=3000 npm start' > /tmp/app.log 2>&1 &",
+      "exitCode": 0,
+      "ms": 221,
+      "outputTail": ""
+    },
+    {
+      "name": "app-log",
+      "cmd": "tail /tmp/app.log",
+      "exitCode": 0,
+      "ms": 0,
+      "outputTail": "\n> acme-notes@0.1.0 start\n> node server.js\n\nacme-notes listening on http://localhost:3000\n"
+    }
+  ],
+  "app": {
+    "status": "runs",
+    "port": 3000
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "text": "`npm test` — 6 tests pass",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 6
+      },
+      "verdict": "verified",
+      "reason": "6 passed, 0 failed; claim says 6",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.648972ms)\n✔ listNotes returns copies, not references (0.18585ms)\n✔ search matches title case-insensitively (0.577541ms)\n✔ search matches body text (0.15975ms)\n✔ empty query returns everything (0.115481ms)\n✔ no match returns empty list (0.727312ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 74.337768\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c2",
+      "text": "GET /health returns 200",
+      "check": {
+        "kind": "http_status",
+        "path": "/health",
+        "expect": 200
+      },
+      "verdict": "verified",
+      "reason": "GET /health returned 200",
+      "evidence": {
+        "cmd": "curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://127.0.0.1:3000/health",
+        "exitCode": 0,
+        "observed": "HTTP 200"
+      }
+    },
+    {
+      "id": "c3",
+      "text": "p50 latency under 50 ms on /notes",
+      "check": {
+        "kind": "latency",
+        "path": "/notes",
+        "samples": 20,
+        "p50MaxMs": 50
+      },
+      "verdict": "verified",
+      "reason": "p50 0.6 ms over 20 sequential requests, measured inside this sandbox (loopback; not a production network) <= 50 ms",
+      "evidence": {
+        "cmd": "for i in $(seq 20); do curl -s -o /dev/null -w '%{time_total}\\n' --max-time 10 http://127.0.0.1:3000/notes; done",
+        "exitCode": 0,
+        "observed": "p50 0.6 ms over 20 sequential requests, measured inside this sandbox (loopback; not a production network)"
+      }
+    },
+    {
+      "id": "c4",
+      "text": "`npm test` — 12 tests pass on the full suite",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 12
+      },
+      "verdict": "refuted",
+      "reason": "6 passed, 0 failed (exit 0); claim says 12",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.866182ms)\n✔ listNotes returns copies, not references (0.22803ms)\n✔ search matches title case-insensitively (0.816602ms)\n✔ search matches body text (0.185401ms)\n✔ empty query returns everything (0.146921ms)\n✔ no match returns empty list (23.206934ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 98.183774\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c5",
+      "text": "AI summaries powered by an external LLM (requires OPENAI_API_KEY)",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "requires a secret/API key; HackProof never passes secrets into the sandbox"
+      },
+      "verdict": "not_checkable",
+      "reason": "requires a secret/API key; HackProof never passes secrets into the sandbox"
+    },
+    {
+      "id": "c6",
+      "text": "Loved by 500+ users",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "claim about real-world usage cannot be reproduced by execution"
+      },
+      "verdict": "not_checkable",
+      "reason": "claim about real-world usage cannot be reproduced by execution"
+    }
+  ],
+  "summary": {
+    "verified": 3,
+    "refuted": 1,
+    "inconclusive": 0,
+    "not_checkable": 2
+  },
+  "sha256": "2af701b615f252c93b206ba1d105a459a507f8eafed311d915f085db465af226"
+}
