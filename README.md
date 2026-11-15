@@ -5,6 +5,7 @@
 Built at Daytona HackSprint Tokyo (2026-11-15).
 
 - **Live demo (temporary, during judging):** https://adds-servers-comparison-drive.trycloudflare.com — paste a GitHub repo, or press "Run demo submission". Each run creates a real Daytona sandbox.
+- **Public read-only site (always on):** https://hackproof-delta.vercel.app — the UI with our real saved receipts, plus the slides.
 - **Slides:** [`docs/slides/hackproof.pdf`](docs/slides/hackproof.pdf)
 - **Latest live receipt:** [`receipts/20261115063134-4f4ace.json`](receipts/20261115063134-4f4ace.json) (GitHub `main` at `6b73204`: 3 verified · 1 refuted · 2 not checkable)
 
