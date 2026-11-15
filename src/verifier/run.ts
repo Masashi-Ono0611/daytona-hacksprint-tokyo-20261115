@@ -123,7 +123,8 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
         }
         const appLog = (await sh('tail -c 600 /tmp/app.log')).out
         steps.push({ name: 'app-log', cmd: 'tail /tmp/app.log', exitCode: 0, ms: 0, outputTail: appLog })
-        app = port ? { status: 'runs', port } : { status: 'fails', reason: `no new port answered HTTP on ${p.start.healthPath} within 45s` + (installOk ? '' : ' (install failed)') }
+        const lastLogLine = appLog.split('\n').map(x => x.trim()).filter(Boolean).pop()?.slice(0, 160)
+        app = port ? { status: 'runs', port } : { status: 'fails', reason: `no new port answered HTTP on ${p.start.healthPath} within 45s` + (installOk ? '' : ' (install failed)') + (lastLogLine ? `; app log: ${lastLogLine}` : '') }
         log(port ? `app serving on port ${port}` : `app did not serve: ${app.reason}`)
       }
     }
@@ -131,7 +132,7 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
     // 5. claims
     for (const c of p.claims) {
       log(`checking claim ${c.id}: ${c.text}`)
-      const r = await evalClaim(c, sh, work, port)
+      const r = await evalClaim(c, sh, work, port, app.reason)
       claims.push(r)
       log(`claim ${c.id}: ${r.verdict} — ${r.reason}`)
     }
@@ -158,7 +159,8 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
   return receipt
 }
 
-async function evalClaim(c: { id: string; text: string; check: any }, sh: Sh, work: string, port?: number): Promise<ClaimResult> {
+async function evalClaim(c: { id: string; text: string; check: any }, sh: Sh, work: string, port?: number, appReason?: string): Promise<ClaimResult> {
+  const why = appReason ? ` (${appReason})` : ''
   const ck = c.check
   const res = (verdict: ClaimResult['verdict'], reason: string, evidence?: ClaimResult['evidence']): ClaimResult =>
     ({ ...c, verdict, reason, ...(evidence ? { evidence } : {}) })
@@ -181,7 +183,7 @@ async function evalClaim(c: { id: string; text: string; check: any }, sh: Sh, wo
     }
     case 'http_status': {
       const cmd = `curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://127.0.0.1:${port ?? APP_PORT}${ck.path}`
-      if (!port) return res('inconclusive', 'app is not serving, so the endpoint could not be requested', { cmd })
+      if (!port) return res('inconclusive', `app is not serving${why}, so the endpoint could not be requested`, { cmd })
       const r = await sh(cmd)
       const code = Number(r.out.trim())
       const ev = { cmd, exitCode: r.rc, observed: `HTTP ${r.out.trim()}` }
@@ -191,7 +193,7 @@ async function evalClaim(c: { id: string; text: string; check: any }, sh: Sh, wo
     case 'latency': {
       const n = Math.min(Math.max(Number(ck.samples) || 20, 3), 50)
       const cmd = `for i in $(seq ${n}); do curl -s -o /dev/null -w '%{time_total}\\n' --max-time 10 http://127.0.0.1:${port ?? APP_PORT}${ck.path}; done`
-      if (!port) return res('inconclusive', 'app is not serving, so latency could not be measured', { cmd })
+      if (!port) return res('inconclusive', `app is not serving${why}, so latency could not be measured`, { cmd })
       const r = await sh(cmd, work, 120)
       const xs = r.out.split('\n').map(Number).filter(x => Number.isFinite(x) && x > 0).map(x => x * 1000).sort((a, b) => a - b)
       if (!xs.length) return res('inconclusive', 'no latency samples collected', { cmd, exitCode: r.rc })

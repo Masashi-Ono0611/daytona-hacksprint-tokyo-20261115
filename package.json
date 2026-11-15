@@ -6,6 +6,7 @@
     "hello": "tsx --env-file=.env src/hello.ts",
     "dev": "tsx --env-file=.env src/server.ts",
     "verify": "tsx --env-file=.env src/cli.ts",
+    "batch": "tsx --env-file=.env src/batch.ts",
     "test:allowlist": "tsx src/verifier/allowlist.ts"
   },
   "dependencies": {

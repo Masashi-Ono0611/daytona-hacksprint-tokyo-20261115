@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { randomBytes } from 'node:crypto'
 import { RECEIPTS_DIR, verify } from './verifier/run.js'
 import type { Receipt, Source, VerifyEvent } from './verifier/types.js'
+import { BATCH_CONCURRENCY, pool } from './batch.js'
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)))
 const PUBLIC = join(ROOT, 'public')
@@ -13,6 +14,11 @@ const PORT = Number(process.env.PORT ?? 4321)
 
 type Run = { status: 'running' | 'done' | 'error'; events: VerifyEvent[]; receipt?: Receipt; error?: string }
 const runs = new Map<string, Run>()
+
+const BATCH_MAX_ITEMS = 5
+type BatchItem = { status: 'queued' | 'running' | 'done' | 'error'; receipt?: Receipt; error?: string }
+type Batch = { status: 'running' | 'done'; items: BatchItem[] }
+const batches = new Map<string, Batch>()
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -50,7 +56,8 @@ function toSource(b: any): Source {
 
 function listReceipts() {
   if (!existsSync(RECEIPTS_DIR)) return []
-  return readdirSync(RECEIPTS_DIR).filter(f => f.endsWith('.json')).flatMap(f => {
+  // batch-*.json are batch reports (src/batch.ts), not receipts
+  return readdirSync(RECEIPTS_DIR).filter(f => f.endsWith('.json') && !f.startsWith('batch-')).flatMap(f => {
     try {
       const r: Receipt = JSON.parse(readFileSync(join(RECEIPTS_DIR, f), 'utf8'))
       return [{ id: r.id, source: r.source, commit: r.commit, startedAt: r.startedAt, finishedAt: r.finishedAt, totalMs: r.totalMs, app: r.app, summary: r.summary, sha256: r.sha256 }]
@@ -80,7 +87,29 @@ createServer(async (req, res) => {
         .catch(e => { run.status = 'error'; run.error = String(e?.message ?? e) })
       return json(res, 202, { id })
     }
+    if (req.method === 'POST' && pathname === '/api/batch') {
+      let sources: Source[]
+      try {
+        const b = await readBody(req)
+        if (!Array.isArray(b?.items) || b.items.length < 1) throw new Error('items must be a non-empty array')
+        if (b.items.length > BATCH_MAX_ITEMS) throw new Error(`at most ${BATCH_MAX_ITEMS} items per batch`)
+        sources = b.items.map((it: any, i: number) => { try { return toSource(it) } catch (e: any) { throw new Error(`item ${i}: ${e?.message ?? e}`) } })
+      } catch (e: any) { return json(res, 400, { error: String(e?.message ?? e) }) }
+      const id = randomBytes(6).toString('hex')
+      const batch: Batch = { status: 'running', items: sources.map(() => ({ status: 'queued' })) }
+      batches.set(id, batch)
+      pool(sources, BATCH_CONCURRENCY, async (source, i) => {
+        batch.items[i].status = 'running'
+        try { batch.items[i] = { status: 'done', receipt: await verify(source) } }
+        catch (e: any) { batch.items[i] = { status: 'error', error: String(e?.message ?? e) } }
+      }).then(() => { batch.status = 'done' })
+      return json(res, 202, { id })
+    }
     let m: RegExpMatchArray | null
+    if (req.method === 'GET' && (m = pathname.match(/^\/api\/batches\/([\w-]+)$/))) {
+      const b = batches.get(m[1])
+      return b ? json(res, 200, b) : json(res, 404, { error: 'unknown batch' })
+    }
     if (req.method === 'GET' && (m = pathname.match(/^\/api\/runs\/([\w-]+)$/))) {
       const r = runs.get(m[1])
       return r ? json(res, 200, r) : json(res, 404, { error: 'unknown run' })

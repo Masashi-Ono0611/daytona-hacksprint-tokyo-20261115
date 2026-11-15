@@ -1,0 +1,15 @@
+{
+  "name": "weather-dash",
+  "version": "0.1.0",
+  "description": "Hyperlocal classroom forecasts",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

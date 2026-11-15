@@ -1,0 +1,150 @@
+{
+  "id": "20261115070858-44910d",
+  "source": {
+    "kind": "local",
+    "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/acme-notes"
+  },
+  "commit": "local",
+  "startedAt": "2026-11-15T07:08:58.613Z",
+  "finishedAt": "2026-11-15T07:09:20.148Z",
+  "totalMs": 21535,
+  "sandbox": {
+    "id": "e2ec5d10-8068-436b-8629-3041fa8638f4",
+    "createMs": 856
+  },
+  "planner": {
+    "kind": "nosana-llm",
+    "model": "qwen/qwen3.8-27b",
+    "host": "inference.nosana.com"
+  },
+  "steps": [
+    {
+      "name": "upload",
+      "cmd": "upload 6 files",
+      "exitCode": 0,
+      "ms": 1659,
+      "outputTail": ""
+    },
+    {
+      "name": "install",
+      "cmd": "npm install --no-audit --no-fund --loglevel=error",
+      "exitCode": 0,
+      "ms": 603,
+      "outputTail": "\nup to date in 290ms\n"
+    },
+    {
+      "name": "start",
+      "cmd": "nohup sh -c 'PORT=3000 npm start' > /tmp/app.log 2>&1 &",
+      "exitCode": 0,
+      "ms": 317,
+      "outputTail": ""
+    },
+    {
+      "name": "app-log",
+      "cmd": "tail /tmp/app.log",
+      "exitCode": 0,
+      "ms": 0,
+      "outputTail": "\n> acme-notes@0.1.0 start\n> node server.js\n\nacme-notes listening on http://localhost:3000\n"
+    }
+  ],
+  "app": {
+    "status": "runs",
+    "port": 3000
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "text": "npm test — 6 tests pass",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 6
+      },
+      "verdict": "verified",
+      "reason": "6 passed, 0 failed; claim says 6",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.601363ms)\n✔ listNotes returns copies, not references (0.143721ms)\n✔ search matches title case-insensitively (0.566313ms)\n✔ search matches body text (0.129821ms)\n✔ empty query returns everything (0.104481ms)\n✔ no match returns empty list (0.098081ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 60.399648\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c2",
+      "text": "GET /health returns 200",
+      "check": {
+        "kind": "http_status",
+        "path": "/health",
+        "expect": 200
+      },
+      "verdict": "verified",
+      "reason": "GET /health returned 200",
+      "evidence": {
+        "cmd": "curl -s -o /dev/null -w '%{http_code}' --max-time 10 http://127.0.0.1:3000/health",
+        "exitCode": 0,
+        "observed": "HTTP 200"
+      }
+    },
+    {
+      "id": "c3",
+      "text": "p50 latency under 50 ms on /notes",
+      "check": {
+        "kind": "latency",
+        "path": "/notes",
+        "samples": 10,
+        "p50MaxMs": 50
+      },
+      "verdict": "verified",
+      "reason": "p50 0.4 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network) <= 50 ms",
+      "evidence": {
+        "cmd": "for i in $(seq 10); do curl -s -o /dev/null -w '%{time_total}\\n' --max-time 10 http://127.0.0.1:3000/notes; done",
+        "exitCode": 0,
+        "observed": "p50 0.4 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network)"
+      }
+    },
+    {
+      "id": "c4",
+      "text": "npm test — 12 tests pass on the full suite",
+      "check": {
+        "kind": "test_count",
+        "cmd": "npm test",
+        "expectPassed": 12
+      },
+      "verdict": "refuted",
+      "reason": "6 passed, 0 failed (exit 0); claim says 12",
+      "evidence": {
+        "cmd": "npm test",
+        "exitCode": 0,
+        "outputTail": "\n> acme-notes@0.1.0 test\n> node --test\n\n✔ seed has 5 notes (0.606723ms)\n✔ listNotes returns copies, not references (0.144681ms)\n✔ search matches title case-insensitively (0.559913ms)\n✔ search matches body text (0.128201ms)\n✔ empty query returns everything (0.103371ms)\n✔ no match returns empty list (0.1025ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 62.854872\n",
+        "observed": "6 passed, 0 failed"
+      }
+    },
+    {
+      "id": "c5",
+      "text": "AI summaries powered by an external LLM (requires OPENAI_API_KEY)",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "Requires external API key and service"
+      },
+      "verdict": "not_checkable",
+      "reason": "Requires external API key and service"
+    },
+    {
+      "id": "c6",
+      "text": "Loved by 500+ users",
+      "check": {
+        "kind": "not_checkable",
+        "reason": "Requires real user data and social proof verification"
+      },
+      "verdict": "not_checkable",
+      "reason": "Requires real user data and social proof verification"
+    }
+  ],
+  "summary": {
+    "verified": 3,
+    "refuted": 1,
+    "inconclusive": 0,
+    "not_checkable": 2
+  },
+  "sha256": "1b85187cd0728b82b15d0d5513918c0edfe39f391a462c280b3e423e67f4cc2f"
+}
