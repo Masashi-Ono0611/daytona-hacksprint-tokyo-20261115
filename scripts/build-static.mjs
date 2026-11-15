@@ -8,7 +8,7 @@ mkdirSync(join(OUT, 'data', 'receipts'), { recursive: true })
 copyFileSync('public/index.html', join(OUT, 'index.html'))
 
 const list = []
-for (const f of readdirSync('receipts').filter(f => f.endsWith('.json'))) {
+for (const f of readdirSync('receipts').filter(f => f.endsWith('.json') && !f.startsWith('batch-'))) {
   const r = JSON.parse(readFileSync(join('receipts', f), 'utf8'))
   copyFileSync(join('receipts', f), join(OUT, 'data', 'receipts', f))
   list.push({ id: r.id, source: r.source, commit: r.commit, finishedAt: r.finishedAt, summary: r.summary, app: r.app })
