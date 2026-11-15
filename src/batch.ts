@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { randomBytes } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
-import { RECEIPTS_DIR, verify } from './verifier/run.js'
+import { RECEIPTS_DIR, publicSource, verify } from './verifier/run.js'
 import type { Receipt, Source } from './verifier/types.js'
 
 // Organizer batch mode: verify several submissions at once, each in its own disposable Daytona sandbox.
@@ -53,7 +53,7 @@ export function batchId(t: number): string {
 }
 
 export function toEntry(source: Source, r: Receipt): BatchEntry {
-  return { source, receiptId: r.id, app: r.app, summary: r.summary, planner: r.planner, score: score(r) }
+  return { source: publicSource(source), receiptId: r.id, app: r.app, summary: r.summary, planner: r.planner, score: score(r) }
 }
 
 const label = (s: Source) => (s.kind === 'local' ? s.dir.split('/').pop()! : `${s.url}${s.subdir ? '#' + s.subdir : ''}`)
@@ -78,7 +78,7 @@ async function main() {
       return toEntry(source, r)
     } catch (e: any) {
       console.log(`${name}: error ${String(e?.message ?? e)}`)
-      return { source, error: String(e?.message ?? e).slice(0, 300) }
+      return { source: publicSource(source), error: String(e?.message ?? e).slice(0, 300) }
     }
   })
   const finishedAt = new Date().toISOString()

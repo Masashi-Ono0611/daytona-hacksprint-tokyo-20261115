@@ -15,6 +15,16 @@ export const RECEIPTS_DIR = resolve(fileURLToPath(new URL('../../receipts', impo
 const tail = (s: string, n = 600) => (s.length > n ? s.slice(-n) : s)
 const sq = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+const PROJECT_ROOT = resolve(RECEIPTS_DIR, '..')
+
+// Receipts are public: never record the operator's absolute local path.
+// Local folders are stored relative to the project root (or by folder name if outside it).
+export function publicSource(source: Source): Source {
+  if (source.kind !== 'local') return source
+  const rel = relative(PROJECT_ROOT, resolve(source.dir))
+  const inside = rel !== '' && !rel.startsWith('..') && !rel.startsWith('/')
+  return { kind: 'local', dir: inside ? rel : (resolve(source.dir).split('/').pop() || 'local') }
+}
 
 type Sh = (cmd: string, cwd?: string, timeoutSec?: number) => Promise<{ rc: number; out: string; ms: number }>
 
@@ -148,7 +158,7 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
   for (const c of claims) summary[c.verdict]++
   const finishedAt = new Date().toISOString()
   const body: Omit<Receipt, 'sha256'> = {
-    id, source, commit, startedAt, finishedAt, totalMs: Date.now() - t0, sandbox: sandboxInfo, planner,
+    id, source: publicSource(source), commit, startedAt, finishedAt, totalMs: Date.now() - t0, sandbox: sandboxInfo, planner,
     steps, app, claims, summary,
   }
   const sha256 = createHash('sha256').update(JSON.stringify(body)).digest('hex')
