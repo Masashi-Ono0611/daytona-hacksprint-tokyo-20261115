@@ -1,0 +1,26 @@
+# HackProof
+
+> HackProof runs a hackathon submission for real and checks what its README claims. Nosana hosted inference (qwen/qwen3.8-27b) reads the README and plans the checks; a fresh Daytona sandbox runs the project; each claim gets a verdict (verified, refuted, inconclusive, not_checkable) from exit codes and measurements, with a receipt. Built at Daytona HackSprint Tokyo, 2026-11-15, by Masa.
+
+Key facts (all from saved receipts in this repo):
+- Real run on GitHub main through the live demo: receipt receipts/20261115065249-39e5cb.json, planner nosana-llm, 3 verified, 1 refuted, 0 inconclusive, 2 not_checkable, 26.2 s.
+- Daytona sandbox creation is about 0.6 s per submission; every receipt records the sandbox id.
+- The LLM only proposes; allow-listed commands and execution results decide every verdict.
+- Sponsors: Daytona (core: one disposable sandbox per submission), Nosana (hosted inference planner).
+
+## Judges
+- [Evidence for each judging criterion](docs/JUDGING.md): Innovation, Completeness, Real-life problem solving, Sponsored product usage, each with links to code and receipts
+- [Slides (PDF)](docs/slides/hackproof.pdf)
+- [Public read-only site](https://hackproof-delta.vercel.app)
+
+## Code
+- [README](README.md): overview and how to run
+- [Sandbox runner and verdicts](src/verifier/run.ts)
+- [Nosana planner with rule-based fallback](src/verifier/planner.ts)
+- [Command allow-list](src/verifier/allowlist.ts)
+- [Web server and API](src/server.ts)
+- [CLI](src/cli.ts)
+
+## Evidence
+- [Receipts](receipts/): real JSON receipts with commit, sandbox id, commands, exit codes, verdicts and SHA-256
+- [Demo submission with one false claim](demo-submissions/acme-notes/README.md)
