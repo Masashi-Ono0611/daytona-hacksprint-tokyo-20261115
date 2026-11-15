@@ -3,13 +3,13 @@ import { resolve } from 'node:path'
 import { verify } from './verifier/run.js'
 import type { Source } from './verifier/types.js'
 
-const [target, subdir] = process.argv.slice(2)
+const [target, subdir, ref] = process.argv.slice(2)
 if (!target) {
   console.error('usage: npm run verify -- <local dir | https://github.com/owner/repo> [subdir]')
   process.exit(2)
 }
 let source: Source
-if (/^https:\/\//.test(target)) source = { kind: 'git', url: target, subdir }
+if (/^https:\/\//.test(target)) source = { kind: 'git', url: target, subdir, ref }
 else {
   const dir = resolve(target, subdir ?? '')
   if (!existsSync(dir) || !statSync(dir).isDirectory()) { console.error(`not a directory: ${dir}`); process.exit(2) }
