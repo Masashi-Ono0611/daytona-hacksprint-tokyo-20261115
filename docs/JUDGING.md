@@ -21,7 +21,7 @@ It works end to end today, three ways:
 
 | Way | How to try | Evidence |
 |---|---|---|
-| Public read-only site | https://hackproof-delta.vercel.app | Shows our saved real receipts and the slides |
+| Public live app | https://hackproof-delta.vercel.app — press "Run demo submission" or paste a GitHub repo | Runs a real check (Vercel Function [`api/verify.ts`](../api/verify.ts) → Daytona sandbox, Nosana planner) and shows the receipt; also lists saved receipts, slides and the demo video |
 | Web UI (live) | `scripts/dev-nosana.sh` then open http://localhost:4321 | Receipt [`20261115065249-39e5cb`](../receipts/20261115065249-39e5cb.json) was produced through the public live demo URL |
 | CLI | `npm run verify -- https://github.com/OWNER/REPO [subdir] [ref]` | Receipt [`20261115065056-ac165b`](../receipts/20261115065056-ac165b.json) |
 
