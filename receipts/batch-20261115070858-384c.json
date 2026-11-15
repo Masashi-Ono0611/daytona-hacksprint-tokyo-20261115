@@ -1,0 +1,77 @@
+{
+  "id": "batch-20261115070858-384c",
+  "startedAt": "2026-11-15T07:08:58.612Z",
+  "finishedAt": "2026-11-15T07:10:00.760Z",
+  "totalMs": 62148,
+  "submissions": [
+    {
+      "source": {
+        "kind": "local",
+        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/acme-notes"
+      },
+      "receiptId": "20261115070858-44910d",
+      "app": {
+        "status": "runs",
+        "port": 3000
+      },
+      "summary": {
+        "verified": 3,
+        "refuted": 1,
+        "inconclusive": 0,
+        "not_checkable": 2
+      },
+      "planner": {
+        "kind": "nosana-llm",
+        "model": "qwen/qwen3.8-27b",
+        "host": "inference.nosana.com"
+      },
+      "score": 5
+    },
+    {
+      "source": {
+        "kind": "local",
+        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/quiz-bot"
+      },
+      "receiptId": "20261115070858-982c29",
+      "app": {
+        "status": "fails",
+        "reason": "no new port answered HTTP on /health within 45s; app log: quiz-bot: DATABASE_URL is not set (a Postgres connection string is required)"
+      },
+      "summary": {
+        "verified": 1,
+        "refuted": 0,
+        "inconclusive": 1,
+        "not_checkable": 1
+      },
+      "planner": {
+        "kind": "nosana-llm",
+        "model": "qwen/qwen3.8-27b",
+        "host": "inference.nosana.com"
+      },
+      "score": 2
+    },
+    {
+      "source": {
+        "kind": "local",
+        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/weather-dash"
+      },
+      "receiptId": "20261115070858-75afb2",
+      "app": {
+        "status": "runs",
+        "port": 3000
+      },
+      "summary": {
+        "verified": 2,
+        "refuted": 1,
+        "inconclusive": 0,
+        "not_checkable": 1
+      },
+      "planner": {
+        "kind": "nosana-llm",
+        "model": "qwen/qwen3.8-27b",
+        "host": "inference.nosana.com"
+      },
+      "score": 3
+    }
+  ]
+}
