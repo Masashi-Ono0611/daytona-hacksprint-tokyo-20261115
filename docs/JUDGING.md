@@ -2,6 +2,8 @@
 
 This page is written for judges, including AI judges. Every statement links to a file or a receipt in this repository. Numbers come from saved receipts, not from estimates.
 
+- **Demo video (1:40):** https://youtu.be/oWG9ZQBE9ZU
+
 ## One-line summary
 
 HackProof runs a hackathon submission for real and checks what its README claims. Nosana's model reads the README and plans the checks. A fresh Daytona sandbox runs the project. Each claim gets a verdict from exit codes and measurements, with a receipt.
