@@ -15,7 +15,7 @@ export const RECEIPTS_DIR = resolve(fileURLToPath(new URL('../../receipts', impo
 const tail = (s: string, n = 600) => (s.length > n ? s.slice(-n) : s)
 const sq = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
-const PROJECT_ROOT = resolve(RECEIPTS_DIR, '..')
+import { PROJECT_ROOT } from './source.js'
 
 // Receipts are public: never record the operator's absolute local path.
 // Local folders are stored relative to the project root (or by folder name if outside it).
@@ -163,8 +163,13 @@ export async function verify(source: Source, onEvent: (e: VerifyEvent) => void =
   }
   const sha256 = createHash('sha256').update(JSON.stringify(body)).digest('hex')
   const receipt: Receipt = { ...body, sha256 }
-  mkdirSync(RECEIPTS_DIR, { recursive: true })
-  writeFileSync(join(RECEIPTS_DIR, `${id}.json`), JSON.stringify(receipt, null, 2))
+  // On read-only hosts (Vercel functions) saving fails; the receipt is still returned to the caller.
+  try {
+    mkdirSync(RECEIPTS_DIR, { recursive: true })
+    writeFileSync(join(RECEIPTS_DIR, `${id}.json`), JSON.stringify(receipt, null, 2))
+  } catch (e: any) {
+    log(`receipt not saved to disk (${String(e?.code ?? e?.message ?? e)}); returned to caller only`)
+  }
   log(`receipt ${id} saved (sha256 ${sha256.slice(0, 12)}…)`)
   return receipt
 }
