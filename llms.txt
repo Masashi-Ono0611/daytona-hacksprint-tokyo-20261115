@@ -4,7 +4,7 @@
 
 Key facts (all from saved receipts in this repo):
 - Real run on GitHub main through the live demo: receipt receipts/20261115065249-39e5cb.json, planner nosana-llm, 3 verified, 1 refuted, 0 inconclusive, 2 not_checkable, 26.2 s.
-- Organizer batch mode: 3 submissions checked in parallel Daytona sandboxes in 62.1 s (receipts/batch-20261115070858-384c.json); results include verified, refuted and inconclusive verdicts.
+- Organizer batch mode: 3 submissions checked in parallel Daytona sandboxes in 63.4 s (receipts/batch-20261115072512-d89a.json); results include verified, refuted and inconclusive verdicts.
 - Daytona sandbox creation is about 0.6 s per submission; every receipt records the sandbox id.
 - The LLM only proposes; allow-listed commands and execution results decide every verdict.
 - Sponsors: Daytona (core: one disposable sandbox per submission), Nosana (hosted inference planner).

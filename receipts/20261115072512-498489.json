@@ -1,16 +1,16 @@
 {
-  "id": "20261115070858-982c29",
+  "id": "20261115072512-498489",
   "source": {
     "kind": "local",
-    "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/quiz-bot"
+    "dir": "demo-submissions/quiz-bot"
   },
   "commit": "local",
-  "startedAt": "2026-11-15T07:08:58.621Z",
-  "finishedAt": "2026-11-15T07:10:00.759Z",
-  "totalMs": 62138,
+  "startedAt": "2026-11-15T07:25:12.437Z",
+  "finishedAt": "2026-11-15T07:26:15.786Z",
+  "totalMs": 63349,
   "sandbox": {
-    "id": "031ed2d0-ff7b-4946-b550-3532a9918c97",
-    "createMs": 732
+    "id": "4453612f-17e8-41b3-a0ba-193a1597b533",
+    "createMs": 1223
   },
   "planner": {
     "kind": "nosana-llm",
@@ -22,21 +22,21 @@
       "name": "upload",
       "cmd": "upload 5 files",
       "exitCode": 0,
-      "ms": 1421,
+      "ms": 1959,
       "outputTail": ""
     },
     {
       "name": "install",
       "cmd": "npm install --no-audit --no-fund --loglevel=error",
       "exitCode": 0,
-      "ms": 1165,
-      "outputTail": "\nup to date in 285ms\n"
+      "ms": 1490,
+      "outputTail": "\nup to date in 330ms\n"
     },
     {
       "name": "start",
       "cmd": "nohup sh -c 'PORT=3000 npm start' > /tmp/app.log 2>&1 &",
       "exitCode": 0,
-      "ms": 354,
+      "ms": 578,
       "outputTail": ""
     },
     {
@@ -65,7 +65,7 @@
       "evidence": {
         "cmd": "npm test",
         "exitCode": 0,
-        "outputTail": "\n> quiz-bot@0.1.0 test\n> node --test\n\n✔ has 3 questions (0.573649ms)\n✔ correct answer scores 1 (0.104869ms)\n✔ wrong answer scores 0 (0.08426ms)\n✔ leaderboard sums points and sorts descending (0.603059ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 61.735729\n",
+        "outputTail": "\n> quiz-bot@0.1.0 test\n> node --test\n\n✔ has 3 questions (0.589479ms)\n✔ correct answer scores 1 (0.11692ms)\n✔ wrong answer scores 0 (0.09497ms)\n✔ leaderboard sums points and sorts descending (0.833139ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 60.497075\n",
         "observed": "4 passed, 0 failed"
       }
     },
@@ -100,5 +100,5 @@
     "inconclusive": 1,
     "not_checkable": 1
   },
-  "sha256": "ea23e7e612273aba5768f0b576f9854834658881efc97fd9291dc6d5509cc38f"
+  "sha256": "dd1163f87a485ef8742e138ee2d83dd0ca5dd3c49d540c9c7a6845e2845662fc"
 }

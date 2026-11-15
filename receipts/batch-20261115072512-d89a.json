@@ -1,15 +1,15 @@
 {
-  "id": "batch-20261115070858-384c",
-  "startedAt": "2026-11-15T07:08:58.612Z",
-  "finishedAt": "2026-11-15T07:10:00.760Z",
-  "totalMs": 62148,
+  "id": "batch-20261115072512-d89a",
+  "startedAt": "2026-11-15T07:25:12.428Z",
+  "finishedAt": "2026-11-15T07:26:15.786Z",
+  "totalMs": 63358,
   "submissions": [
     {
       "source": {
         "kind": "local",
-        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/acme-notes"
+        "dir": "demo-submissions/acme-notes"
       },
-      "receiptId": "20261115070858-44910d",
+      "receiptId": "20261115072512-dc5eaa",
       "app": {
         "status": "runs",
         "port": 3000
@@ -30,9 +30,9 @@
     {
       "source": {
         "kind": "local",
-        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/quiz-bot"
+        "dir": "demo-submissions/quiz-bot"
       },
-      "receiptId": "20261115070858-982c29",
+      "receiptId": "20261115072512-498489",
       "app": {
         "status": "fails",
         "reason": "no new port answered HTTP on /health within 45s; app log: quiz-bot: DATABASE_URL is not set (a Postgres connection string is required)"
@@ -53,9 +53,9 @@
     {
       "source": {
         "kind": "local",
-        "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/weather-dash"
+        "dir": "demo-submissions/weather-dash"
       },
-      "receiptId": "20261115070858-75afb2",
+      "receiptId": "20261115072512-68f527",
       "app": {
         "status": "runs",
         "port": 3000

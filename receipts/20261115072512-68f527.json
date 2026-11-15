@@ -1,16 +1,16 @@
 {
-  "id": "20261115070858-75afb2",
+  "id": "20261115072512-68f527",
   "source": {
     "kind": "local",
-    "dir": "/Users/masashi_mac_ssd/Developer/daytona-hacksprint-tokyo-20261115/demo-submissions/weather-dash"
+    "dir": "demo-submissions/weather-dash"
   },
   "commit": "local",
-  "startedAt": "2026-11-15T07:08:58.622Z",
-  "finishedAt": "2026-11-15T07:09:20.145Z",
-  "totalMs": 21523,
+  "startedAt": "2026-11-15T07:25:12.438Z",
+  "finishedAt": "2026-11-15T07:25:36.630Z",
+  "totalMs": 24193,
   "sandbox": {
-    "id": "7d696853-05e7-4008-8add-6d8ab0ad19d7",
-    "createMs": 727
+    "id": "5b94d5ef-acca-4fe2-9dfa-65ba2d193a45",
+    "createMs": 1223
   },
   "planner": {
     "kind": "nosana-llm",
@@ -22,21 +22,21 @@
       "name": "upload",
       "cmd": "upload 5 files",
       "exitCode": 0,
-      "ms": 1682,
+      "ms": 1959,
       "outputTail": ""
     },
     {
       "name": "install",
       "cmd": "npm install --no-audit --no-fund --loglevel=error",
       "exitCode": 0,
-      "ms": 2559,
-      "outputTail": "\nup to date in 322ms\n"
+      "ms": 3123,
+      "outputTail": "\nup to date in 274ms\n"
     },
     {
       "name": "start",
       "cmd": "nohup sh -c 'PORT=3000 npm start' > /tmp/app.log 2>&1 &",
       "exitCode": 0,
-      "ms": 395,
+      "ms": 336,
       "outputTail": ""
     },
     {
@@ -65,7 +65,7 @@
       "evidence": {
         "cmd": "npm test",
         "exitCode": 1,
-        "outputTail": "\n\ntest at test/forecast.test.js:24:1\n✖ average high rounds to nearest degree (0.671366ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  15 !== 16\n  \n      at TestContext.<anonymous> (/home/daytona/app/test/forecast.test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 15,\n    expected: 16,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+        "outputTail": "\n\ntest at test/forecast.test.js:24:1\n✖ average high rounds to nearest degree (0.692792ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  15 !== 16\n  \n      at TestContext.<anonymous> (/home/daytona/app/test/forecast.test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 15,\n    expected: 16,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
         "observed": "4 passed, 1 failed"
       }
     },
@@ -95,11 +95,11 @@
         "p50MaxMs": 20
       },
       "verdict": "verified",
-      "reason": "p50 0.5 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network) <= 20 ms",
+      "reason": "p50 0.4 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network) <= 20 ms",
       "evidence": {
         "cmd": "for i in $(seq 10); do curl -s -o /dev/null -w '%{time_total}\\n' --max-time 10 http://127.0.0.1:3000/forecast; done",
         "exitCode": 0,
-        "observed": "p50 0.5 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network)"
+        "observed": "p50 0.4 ms over 10 sequential requests, measured inside this sandbox (loopback; not a production network)"
       }
     },
     {
@@ -107,10 +107,10 @@
       "text": "Used by 3 schools",
       "check": {
         "kind": "not_checkable",
-        "reason": "Requires external verification of real-world usage which cannot be reproduced via command"
+        "reason": "Requires external verification of real users/customers"
       },
       "verdict": "not_checkable",
-      "reason": "Requires external verification of real-world usage which cannot be reproduced via command"
+      "reason": "Requires external verification of real users/customers"
     }
   ],
   "summary": {
@@ -119,5 +119,5 @@
     "inconclusive": 0,
     "not_checkable": 1
   },
-  "sha256": "5e9873487985325de3b77e7b67deb8a704684a09ad80db5b5dc12ff714864668"
+  "sha256": "1d0301c6471991ccaa5b9bcdf18f803b1427855f5f5b584931915a5b231c4f8a"
 }
