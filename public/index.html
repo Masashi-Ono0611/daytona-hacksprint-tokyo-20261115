@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HackProof</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --ink:#2f2a3a; --ink2:#5a5366; --cream:#fbf3e4; --butter:#f5e2a8; --sky:#b3d3e2; --rose:#e9bfc2;
+    --sagebg:#d3e4cc; --paper:#fffaf0; --ok:#a5c99d; --bad:#ee9c8c; --amb:#f1c46e; --na:#d8d0c6; --pink:#d98b95;
+    --line:#e6dccb; --term:#2f2a3a; --termtext:#f5ecd9;
+    --round: "Arial Rounded MT Bold", "SF Pro Rounded", ui-rounded, "Nunito", "Trebuchet MS", system-ui, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 18px/1.5 var(--body); }
+  .topband { background: var(--butter); border-bottom: 0; }
+  .topband .inner { max-width: 1320px; margin: 0 auto; padding: 22px 32px 14px; display: flex; align-items: center; gap: 22px; }
+  .wave { display: block; width: 100%; height: 22px; }
+  main { max-width: 1320px; margin: 0 auto; padding: 20px 32px 56px; }
+  .pup { width: 84px; height: 87px; flex: none; }
+  h1 { font: 400 40px/1.05 var(--round); margin: 0 0 6px; letter-spacing: -.5px; }
+  h1 .sub { font-size: 24px; color: var(--ink2); letter-spacing: 0; }
+  h2 { font: 400 26px/1.2 var(--round); margin: 0 0 16px; }
+  .tagline { margin: 0; }
+  .tagline span { display: inline-block; font: 400 18px/1 var(--round); background: var(--pink); color: var(--paper);
+    border: 3px solid var(--ink); border-radius: 12px; padding: 6px 12px; box-shadow: 3px 3px 0 var(--ink); }
+  section { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; padding: 24px 26px;
+    margin-bottom: 24px; box-shadow: 5px 5px 0 var(--ink); }
+  form { display: grid; grid-template-columns: 1fr 240px 180px; gap: 14px; }
+  label { display: block; font: 400 15px var(--round); color: var(--ink2); margin-bottom: 6px; letter-spacing: .3px; }
+  input { width: 100%; font: 18px var(--body); padding: 12px 14px; border-radius: 12px; border: 3px solid var(--ink);
+    background: #fff; color: var(--ink); }
+  input::placeholder { color: #a69f94; }
+  input:focus { outline: 3px solid var(--sky); outline-offset: 2px; }
+  .actions { grid-column: 1 / -1; display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+  button { font: 400 18px var(--round); padding: 12px 22px; border-radius: 14px; border: 3px solid var(--ink);
+    background: var(--sky); color: var(--ink); cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+    transition: transform .08s, box-shadow .08s; }
+  button:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+  button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  button.primary { background: var(--ok); }
+  button:disabled { opacity: .55; cursor: progress; }
+  #status { margin-top: 14px; color: var(--ink2); min-height: 1.5em; font-weight: 600; }
+  #status.err { color: #b4535f; }
+  #log { font: 15px/1.55 var(--mono); background: var(--term); color: var(--termtext); border-radius: 12px;
+    padding: 16px 18px; max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
+  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 28px; margin: 4px 0 22px;
+    padding: 16px 18px; background: var(--cream); border-radius: 14px; }
+  .meta div span { display: block; font: 400 14px var(--round); color: var(--ink2); letter-spacing: .3px; }
+  .meta div b { font: 600 16px var(--mono); word-break: break-all; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font: 400 15px/1.3 var(--round);
+    color: var(--ink); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); text-transform: uppercase;
+    letter-spacing: .5px; white-space: nowrap; animation: pop .35s cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes pop { from { transform: scale(.7); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .badge { animation: none; } }
+  .b-verified, .b-runs { background: var(--ok); }
+  .b-refuted, .b-fails { background: var(--bad); }
+  .b-inconclusive { background: var(--amb); }
+  .b-not_checkable, .b-not_started, .b-unknown { background: var(--na); }
+  .summary { font: 400 30px/1.3 var(--round); margin: 6px 0 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .summary .muted { font: 600 18px var(--body); }
+  .summary .badge { font-size: 18px; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  th, td { text-align: left; vertical-align: top; padding: 16px 14px; border-top: 2px solid var(--line); }
+  th { font: 400 14px var(--round); color: var(--ink2); text-transform: uppercase; letter-spacing: 1px; border-top: none; padding-bottom: 10px; }
+  tbody tr:nth-child(even) td { background: #fdf6ea; }
+  td.claim { font-weight: 700; }
+  code, .mono { font-family: var(--mono); font-size: 15px; }
+  td code { background: var(--cream); border-radius: 6px; padding: 2px 6px; }
+  .ev div { font: 14px/1.5 var(--mono); word-break: break-word; }
+  details { margin-top: 8px; }
+  summary { cursor: pointer; color: #3d6f88; font-weight: 600; }
+  pre.tail { font: 13px/1.45 var(--mono); background: var(--term); color: var(--termtext); border-radius: 10px;
+    padding: 12px; max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+  .sha { font: 14px var(--mono); color: var(--ink2); word-break: break-all; margin-top: 18px; }
+  a { color: #3d6f88; font-weight: 600; }
+  ul.past { list-style: none; margin: 0; padding: 0; }
+  ul.past li { padding: 14px 10px; border-top: 2px solid var(--line); cursor: pointer; display: flex; gap: 18px; flex-wrap: wrap; align-items: center; border-radius: 10px; }
+  ul.past li:first-child { border-top: none; }
+  ul.past li:hover, ul.past li:focus { background: var(--cream); outline: none; }
+  .muted { color: var(--ink2); }
+  footer { color: var(--ink2); font-size: 16px; padding: 14px 4px 0; }
+  .hidden { display: none; }
+  @media (max-width: 760px) {
+    body { font-size: 16px; } h1 { font-size: 28px; } .pup { width: 56px; height: 58px; }
+    form { grid-template-columns: 1fr; }
+    main, .topband .inner { padding-left: 16px; padding-right: 16px; }
+    .table-wrap { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<header class="topband">
+  <div class="inner">
+    <svg class="pup" viewBox="0 0 300 310" role="img" aria-label="Proofy the puppy"><defs>
+    <g id="pup-base">
+    <ellipse cx="150" cy="262" rx="76" ry="36" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="112" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <ellipse cx="188" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
+    <circle cx="150" cy="140" r="92" fill="#f8e8d0" stroke="#2f2a3a" stroke-width="6"/>
+    <ellipse cx="190" cy="122" rx="34" ry="30" fill="#e7c49c"/>
+    <ellipse cx="68" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(16 68 138)"/>
+    <ellipse cx="232" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(-16 232 138)"/>
+    <ellipse cx="150" cy="182" rx="46" ry="32" fill="#fffaf0"/>
+    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#2f2a3a"/>
+    <circle cx="94" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+    <circle cx="206" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+  </g>
+  <g id="f-happy">
+    <path d="M96 130 q16 -18 32 0 M172 130 q16 -18 32 0" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M140 190 q10 18 20 0 z" fill="#e98585" stroke="#2f2a3a" stroke-width="3"/>
+    <path d="M150 176 v8 M150 184 q-12 10 -22 0 M150 184 q12 10 22 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+  </g>
+    </defs><use href="#pup-base"/><use href="#f-happy"/></svg>
+    <div>
+      <h1>HackProof <span class="sub">— receipts for hackathon claims</span></h1>
+      <p class="tagline"><span>Don't trust the README. Run it.</span></p>
+    </div>
+  </div>
+</header>
+<svg class="wave" viewBox="0 0 1280 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 H1280 V20 Q1200 40 1120 20 T960 20 T800 20 T640 20 T480 20 T320 20 T160 20 T0 20 Z" fill="#f5e2a8"/></svg>
+<main>
+
+  <section>
+    <form id="form" autocomplete="off">
+      <div><label for="repoUrl">GitHub repo URL</label>
+        <input id="repoUrl" type="url" placeholder="https://github.com/team/project"></div>
+      <div><label for="subdir">Subdir (optional)</label><input id="subdir" placeholder="apps/api"></div>
+      <div><label for="ref">Ref (optional)</label><input id="ref" placeholder="main"></div>
+      <div class="actions">
+        <button type="submit" class="primary" id="verifyBtn">Verify</button>
+        <button type="button" id="demoBtn">Run demo submission (acme-notes)</button>
+      </div>
+    </form>
+    <div id="status" role="status"></div>
+  </section>
+
+  <section id="logSection" class="hidden">
+    <h2>Live log</h2>
+    <pre id="log"></pre>
+  </section>
+
+  <section id="receiptSection" class="hidden">
+    <h2>Receipt</h2>
+    <div id="receipt"></div>
+  </section>
+
+  <section>
+    <h2>Past receipts</h2>
+    <ul class="past" id="past"><li class="muted">Loading…</li></ul>
+  </section>
+
+  <footer>Verdicts come from exit codes and measurements inside a disposable Daytona sandbox. The LLM only proposes what to check. Results apply to this commit and this environment.</footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var pollTimer = null;
+
+  // Build DOM nodes safely: text is always set via textContent (receipt data is untrusted).
+  function el(tag, attrs, children) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'text') n.textContent = attrs[k];
+      else if (k === 'class') n.className = attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) {
+      if (c == null) return;
+      n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+  function str(v) { return v == null ? '' : String(v); }
+  var KNOWN = ['verified', 'refuted', 'inconclusive', 'not_checkable', 'runs', 'fails', 'not_started'];
+  function badge(v) {
+    var s = str(v) || 'unknown';
+    var cls = KNOWN.indexOf(s) >= 0 ? s : 'unknown';
+    return el('span', { class: 'badge b-' + cls, text: s.replace('_', ' ') });
+  }
+  function fmtMs(ms) {
+    if (typeof ms !== 'number' || !isFinite(ms)) return '—';
+    return ms >= 1000 ? (ms / 1000).toFixed(1) + ' s' : Math.round(ms) + ' ms';
+  }
+  function setStatus(msg, isErr) { var s = $('status'); s.textContent = msg || ''; s.className = isErr ? 'err' : ''; }
+  function busy(b) { $('verifyBtn').disabled = b; $('demoBtn').disabled = b; }
+
+  async function getJSON(url, opts) {
+    var r = await fetch(url, opts);
+    var txt = await r.text();
+    var data; try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = null; }
+    if (!r.ok) throw new Error((data && data.error) ? str(data.error) : ('HTTP ' + r.status));
+    return data;
+  }
+
+  async function start(body) {
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    busy(true); setStatus('Starting…');
+    $('log').textContent = ''; $('logSection').classList.remove('hidden');
+    $('receiptSection').classList.add('hidden');
+    try {
+      var res = await getJSON('/api/verify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res || !res.id) throw new Error('No run id returned');
+      setStatus('Running in sandbox… (run ' + str(res.id) + ')');
+      poll(res.id);
+    } catch (e) { setStatus('Could not start: ' + e.message, true); busy(false); }
+  }
+
+  function renderLog(events) {
+    var log = $('log');
+    var atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 20;
+    var t0 = events.length && typeof events[0].t === 'number' ? events[0].t : null;
+    log.textContent = events.map(function (ev) {
+      var ts = (t0 != null && typeof ev.t === 'number') ? ('+' + ((ev.t - t0) / 1000).toFixed(1) + 's').padStart(8) + '  ' : '';
+      return ts + str(ev && ev.msg);
+    }).join('\n');
+    if (atBottom) log.scrollTop = log.scrollHeight;
+  }
+
+  async function poll(id) {
+    try {
+      var run = await getJSON('/api/runs/' + encodeURIComponent(id));
+      renderLog(Array.isArray(run && run.events) ? run.events : []);
+      if (run.status === 'done') {
+        busy(false); setStatus('Done.');
+        if (run.receipt) renderReceipt(run.receipt);
+        loadPast(); return;
+      }
+      if (run.status === 'error') {
+        busy(false); setStatus('Run failed: ' + str(run.error || 'unknown error'), true);
+        if (run.receipt) renderReceipt(run.receipt);
+        loadPast(); return;
+      }
+    } catch (e) { setStatus('Polling error (retrying): ' + e.message, true); }
+    pollTimer = setTimeout(function () { poll(id); }, 1000);
+  }
+
+  function metaItem(label, value) { return el('div', null, [el('span', { text: label }), el('b', { text: value })]); }
+
+  function sourceText(src) {
+    if (!src) return '—';
+    if (src.kind === 'local') return 'local: ' + str(src.dir);
+    var s = str(src.url);
+    if (src.ref) s += ' @ ' + str(src.ref);
+    if (src.subdir) s += ' / ' + str(src.subdir);
+    return s || '—';
+  }
+
+  function evidenceCell(ev) {
+    if (!ev) return el('td', { class: 'muted', text: '—' });
+    var box = el('div', { class: 'ev' });
+    if (ev.cmd != null) box.appendChild(el('div', null, ['$ ', str(ev.cmd)]));
+    if (ev.exitCode != null) box.appendChild(el('div', { text: 'exit ' + str(ev.exitCode) }));
+    if (ev.observed != null) box.appendChild(el('div', { text: 'observed: ' + (typeof ev.observed === 'object' ? JSON.stringify(ev.observed) : str(ev.observed)) }));
+    var td = el('td', null, [box]);
+    if (ev.outputTail) td.appendChild(el('details', null, [el('summary', { text: 'output tail' }), el('pre', { class: 'tail', text: str(ev.outputTail) })]));
+    return td;
+  }
+
+  function renderReceipt(r) {
+    var root = $('receipt'); root.replaceChildren();
+    var app = r.app || {}, planner = r.planner || {}, sandbox = r.sandbox || {};
+    var appLine = el('div', { class: 'summary' }, ['App: ', badge(app.status || 'unknown'),
+      app.port ? el('span', { class: 'muted', text: '  port ' + str(app.port) }) : null,
+      app.reason ? el('span', { class: 'muted', text: '  — ' + str(app.reason) }) : null]);
+    root.appendChild(appLine);
+
+    var plannerText = str(planner.kind || '—');
+    if (planner.model) plannerText += ' · ' + str(planner.model);
+    if (planner.host) plannerText += ' @ ' + str(planner.host);
+    var meta = el('div', { class: 'meta' }, [
+      metaItem('Source', sourceText(r.source)),
+      metaItem('Commit', str(r.commit || '—')),
+      metaItem('Sandbox', str(sandbox.id || '—') + (sandbox.createMs != null ? ' (' + fmtMs(sandbox.createMs) + ' to create)' : '')),
+      metaItem('Planner', plannerText),
+      metaItem('Total time', fmtMs(r.totalMs))
+    ]);
+    if (planner.fallbackReason) meta.appendChild(metaItem('Planner fallback', str(planner.fallbackReason)));
+    root.appendChild(meta);
+
+    var sm = r.summary || {};
+    var n = function (k) { return typeof sm[k] === 'number' ? sm[k] : 0; };
+    root.appendChild(el('div', { class: 'summary', text:
+      n('verified') + ' verified · ' + n('refuted') + ' refuted · ' + n('inconclusive') + ' inconclusive · ' + n('not_checkable') + ' not checkable' }));
+
+    var tbody = el('tbody');
+    (Array.isArray(r.claims) ? r.claims : []).forEach(function (c) {
+      var kind = c && c.check && c.check.kind;
+      tbody.appendChild(el('tr', null, [
+        el('td', { class: 'claim', text: str(c.text) }),
+        el('td', null, [el('code', { text: str(kind || '—') })]),
+        el('td', null, [badge(c.verdict)]),
+        el('td', { text: str(c.reason) }),
+        evidenceCell(c.evidence)
+      ]));
+    });
+    if (!tbody.children.length) tbody.appendChild(el('tr', null, [el('td', { colspan: '5', class: 'muted', text: 'No claims extracted.' })]));
+    var head = el('thead', null, [el('tr', null, ['Claim', 'Check', 'Verdict', 'Reason', 'Evidence'].map(function (h) { return el('th', { text: h }); }))]);
+    root.appendChild(el('div', { class: 'table-wrap' }, [el('table', null, [head, tbody])]));
+
+    var steps = Array.isArray(r.steps) ? r.steps : [];
+    var stepBody = el('tbody');
+    steps.forEach(function (s) {
+      var tr = el('tr', null, [
+        el('td', { text: str(s.name) }),
+        el('td', null, [el('code', { text: str(s.cmd) })]),
+        el('td', { class: 'mono', text: str(s.exitCode) }),
+        el('td', { class: 'mono', text: fmtMs(s.ms) })
+      ]);
+      stepBody.appendChild(tr);
+      if (s.outputTail) stepBody.appendChild(el('tr', null, [el('td', { colspan: '4' }, [
+        el('details', null, [el('summary', { text: 'output tail' }), el('pre', { class: 'tail', text: str(s.outputTail) })])])]));
+    });
+    root.appendChild(el('details', null, [el('summary', { text: 'Steps (' + steps.length + ')' }),
+      el('div', { class: 'table-wrap' }, [el('table', null, [
+        el('thead', null, [el('tr', null, ['Step', 'Command', 'Exit', 'Time'].map(function (h) { return el('th', { text: h }); }))]),
+        stepBody])])]));
+
+    var sha = el('div', { class: 'sha' }, ['sha256: ', str(r.sha256 || '—'), '   ']);
+    if (r.id) sha.appendChild(el('a', { href: '/api/receipts/' + encodeURIComponent(str(r.id)), download: 'hackproof-' + str(r.id) + '.json', text: 'Download JSON' }));
+    root.appendChild(sha);
+
+    $('receiptSection').classList.remove('hidden');
+    $('receiptSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function loadPast() {
+    var ul = $('past');
+    try {
+      var list = await getJSON('/api/receipts');
+      ul.replaceChildren();
+      if (!Array.isArray(list) || !list.length) { ul.appendChild(el('li', { class: 'muted', text: 'No receipts yet.' })); return; }
+      list.forEach(function (it) {
+        var sm = it.summary || {};
+        var li = el('li', { tabindex: '0' }, [
+          badge(it.app && it.app.status ? it.app.status : (typeof it.app === 'string' ? it.app : 'unknown')),
+          el('span', { text: sourceText(it.source) }),
+          el('span', { class: 'mono muted', text: str(it.commit).slice(0, 12) }),
+          el('span', { class: 'muted', text: (sm.verified || 0) + '✓ ' + (sm.refuted || 0) + '✗ ' + (sm.inconclusive || 0) + '? ' + (sm.not_checkable || 0) + '–' }),
+          el('span', { class: 'muted', text: it.finishedAt ? new Date(it.finishedAt).toLocaleString() : '' })
+        ]);
+        var open = async function () {
+          try { setStatus('Loading receipt ' + str(it.id) + '…'); renderReceipt(await getJSON('/api/receipts/' + encodeURIComponent(str(it.id)))); setStatus(''); }
+          catch (e) { setStatus('Could not load receipt: ' + e.message, true); }
+        };
+        li.addEventListener('click', open);
+        li.addEventListener('keydown', function (e) { if (e.key === 'Enter') open(); });
+        ul.appendChild(li);
+      });
+    } catch (e) { ul.replaceChildren(el('li', { class: 'muted', text: 'Could not load receipts: ' + e.message })); }
+  }
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var repoUrl = $('repoUrl').value.trim();
+    if (!repoUrl) { setStatus('Enter a GitHub repo URL, or run the demo submission.', true); return; }
+    var body = { repoUrl: repoUrl };
+    var subdir = $('subdir').value.trim(), ref = $('ref').value.trim();
+    if (subdir) body.subdir = subdir;
+    if (ref) body.ref = ref;
+    start(body);
+  });
+  $('demoBtn').addEventListener('click', function () { start({ localDir: 'demo-submissions/acme-notes' }); });
+  loadPast();
+})();
+</script>
+</body>
+</html>
