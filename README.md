@@ -1,6 +1,6 @@
 # Daytona HackSprint Tokyo (2026-11-15)
 
-Local-first workspace（origin は未設定。チームrepoがあれば後で `git remote add origin`）。
+Daytona と Nosana を使ったハッカソン用リポジトリ（開発中）。
 
 ## イベント情報（コミュニティ固定投稿より）
 - 主催: AI Builders / スポンサー: Daytona, Nosana
