@@ -308,12 +308,19 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
   </div>
   <div class="pan box pop d3" style="left:655px">
     <div class="logo"><img src="assets/logo-nosana.svg" alt="Nosana" style="height:30px"></div>
-    <p><b>Planner model on a Nosana GPU</b> (Ollama qwen2.5-coder:7b, OpenAI-compatible API).</p>
-    <div class="proof" style="display:flex;justify-content:center"><span class="sticker s-ok tagp">Proof</span><img src="assets/nosana-deployment.png" alt="Nosana deployment on an RTX 3060 Ti" style="height:100%;width:auto;display:block" onerror="this.style.display='none'"></div>
-    <div class="cap">Our deployment on an RTX 3060 Ti. It was still starting during the event, so today's runs used the rule-based planner. The receipt records which planner ran.</div>
+    <p><b>Nosana hosted inference</b> (Qwen 3.8 27B) reads the README and plans the checks. Daytona runs them.</p>
+    <div class="proof" style="display:flex;flex-direction:column;justify-content:center;padding:40px 22px 14px;box-sizing:border-box;background:#05071a;font:600 16px/1.5 var(--mono);color:var(--mut)"><span class="sticker s-ok tagp">Proof</span>
+      <div style="color:var(--cyan)">receipt 20261115065249-39e5cb</div>
+      <div>"planner": {</div>
+      <div>&nbsp;&nbsp;"kind": <span style="color:#39ff9a">"nosana-llm"</span>,</div>
+      <div>&nbsp;&nbsp;"model": <span style="color:#39ff9a">"qwen/qwen3.8-27b"</span>,</div>
+      <div>&nbsp;&nbsp;"host": <span style="color:#39ff9a">"inference.nosana.com"</span> }</div>
+      <div style="margin-top:8px;color:var(--fg);font-size:14.5px;white-space:nowrap">3 verified · 1 refuted · 2 not checkable · 26.2 s</div>
+    </div>
+    <div class="cap">Live run from our public demo. The model only plans. Allow-listed commands and real results decide each verdict.</div>
   </div>
   <p class="lim"><b>Limits:</b> true for one commit and one environment. Secrets, GPUs, real users → not checkable. Real use needs participant consent and an appeal path.</p>
-  <div class="ticker"><div class="track">DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA GPU PLANNER · HONEST LIMITS ·</div></div>
+  <div class="ticker"><div class="track">DAYTONA SANDBOX PER SUBMISSION · NOSANA HOSTED INFERENCE · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA HOSTED INFERENCE · HONEST LIMITS · DAYTONA SANDBOX PER SUBMISSION · NOSANA HOSTED INFERENCE · HONEST LIMITS ·</div></div>
 </section>
 
 <!-- 8 · Judging criteria -->
@@ -323,9 +330,9 @@ h2 { font-size:54px; line-height:1.02; margin:0; letter-spacing:-1px }
   <svg class="pup bob" viewBox="0 0 300 310" style="right:60px;top:20px;width:130px;height:134px"><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
   <div class="jrows">
     <div class="jrow box pop d2"><span class="ck">✓</span><span class="nm">Innovation</span><p><b>Receipts, not opinions.</b> The verdict comes from exit codes and measurements, not from an LLM.</p></div>
-    <div class="jrow box pop d3"><span class="ck">✓</span><span class="nm">Completeness</span><p><b>It works end to end today:</b> paste a GitHub repo → Daytona sandbox → verdicts → receipt in about 10 seconds. Web UI + CLI.</p></div>
+    <div class="jrow box pop d3"><span class="ck">✓</span><span class="nm">Completeness</span><p><b>It works end to end today:</b> paste a GitHub repo → Daytona sandbox → verdicts → receipt in under 30 seconds. Web UI + CLI.</p></div>
     <div class="jrow box pop d4"><span class="ck">✓</span><span class="nm">Real-life problem</span><p><b>Judges cannot run every project.</b> HackProof checks what a README claims, and says what it cannot check.</p></div>
-    <div class="jrow box pop d5"><span class="ck">✓</span><span class="nm">Sponsor usage</span><p><b>Daytona runs every check</b> (sandbox per submission). Nosana GPU planner is integrated in code.</p></div>
+    <div class="jrow box pop d5"><span class="ck">✓</span><span class="nm">Sponsor usage</span><p><b>Daytona runs every check</b> (sandbox per submission). Nosana hosted inference (Qwen 3.8 27B) reads the README and plans the checks.</p></div>
   </div>
   <div class="ticker"><div class="track">INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE · INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE · INNOVATION · COMPLETENESS · REAL-LIFE PROBLEM · SPONSOR USAGE ·</div></div>
 </section>
