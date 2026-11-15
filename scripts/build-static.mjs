@@ -26,4 +26,18 @@ const GH = 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115
 const llms = readFileSync('llms.txt', 'utf8').replace(/\]\((?!https?:)([^)]+)\)/g, (_, p) => `](${GH}${p})`)
 writeFileSync(join(OUT, 'llms.txt'), llms)
 copyFileSync('docs/JUDGING.md', join(OUT, 'JUDGING.md'))
-console.log(`static site: ${list.length} receipts -> ${OUT}/`)
+
+// Live verification on Vercel: one bundled function (no secrets in files; keys are Vercel env vars).
+const { build } = await import('esbuild')
+await build({
+  entryPoints: ['api/verify.ts'], outfile: join(OUT, 'api', 'verify.mjs'),
+  bundle: true, platform: 'node', format: 'esm', target: 'node20',
+  external: ['@daytonaio/sdk'], logLevel: 'warning',
+})
+const sdkVersion = JSON.parse(readFileSync('node_modules/@daytonaio/sdk/package.json', 'utf8')).version
+writeFileSync(join(OUT, 'package.json'), JSON.stringify({ private: true, type: 'module', dependencies: { '@daytonaio/sdk': sdkVersion } }, null, 2))
+cpSync('demo-submissions', join(OUT, 'demo-submissions'), { recursive: true, filter: s => !s.includes('node_modules') })
+writeFileSync(join(OUT, 'vercel.json'), JSON.stringify({
+  functions: { 'api/verify.mjs': { maxDuration: 300, includeFiles: 'demo-submissions/**' } },
+}, null, 2))
+console.log(`static site: ${list.length} receipts + live function (sdk ${sdkVersion}) -> ${OUT}/`)

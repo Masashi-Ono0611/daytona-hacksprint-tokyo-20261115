@@ -324,6 +324,8 @@
 
   // Static (read-only) mode: on a static host there is no /api. Saved real receipts are served from /data/.
   var STATIC = false;
+  // LIVE: the static host also has a serverless /api/verify (Vercel Function) that runs a real check synchronously.
+  var LIVE = false;
   function staticUrl(url) {
     if (url === '/api/receipts') return '/data/receipts.json';
     var m = /^\/api\/receipts\/([A-Za-z0-9-]+)$/.exec(url);
@@ -352,12 +354,36 @@
     busy(true); setStatus('Starting…');
     $('log').textContent = ''; $('logSection').classList.remove('hidden');
     $('receiptSection').classList.add('hidden');
+    if (STATIC && LIVE) return startLive(body);
     try {
       var res = await getJSON('/api/verify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
       if (!res || !res.id) throw new Error('No run id returned');
       setStatus('Running in sandbox… (run ' + str(res.id) + ')');
       poll(res.id);
     } catch (e) { setStatus('Could not start: ' + e.message, true); busy(false); }
+  }
+
+  // Synchronous run on the serverless function: one request, the receipt comes back when the sandbox is done.
+  async function startLive(body) {
+    var t0 = Date.now();
+    var tick = setInterval(function () {
+      var s = Math.round((Date.now() - t0) / 1000);
+      $('log').textContent = 'Creating a disposable Daytona sandbox, planning checks with Nosana, running them…\n' + s + ' s (usually 10–40 s)';
+    }, 500);
+    setStatus('Running in a real Daytona sandbox…');
+    try {
+      var r = await fetch('/api/verify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      var txt = await r.text();
+      var data; try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = null; }
+      clearInterval(tick);
+      if (data && Array.isArray(data.events)) renderLog(data.events);
+      if (!r.ok || !data || !data.receipt) throw new Error((data && data.error) ? str(data.error) : ('HTTP ' + r.status));
+      busy(false); setStatus('Done. This receipt is from the run you just started (not saved on the server).');
+      renderReceipt(data.receipt);
+    } catch (e) {
+      clearInterval(tick);
+      busy(false); setStatus('Run failed: ' + e.message, true);
+    }
   }
 
   function renderLog(events) {
@@ -490,6 +516,18 @@
     var form = $('form');
     form.parentNode.insertBefore(b, form);
     $('verifyBtn').disabled = true; $('demoBtn').disabled = true;
+    // If this host also runs the serverless /api/verify, turn live verification on.
+    fetch('/api/verify', { method: 'GET' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || d.live !== true) return;
+      LIVE = true;
+      b.replaceChildren(
+        el('strong', { text: 'Live. ' }),
+        el('span', { text: 'Press Verify or Run demo: each run creates a real Daytona sandbox' + (d.planner === 'nosana-llm' ? ', Nosana plans the checks' : '') + ', and you get a receipt in about 10–40 s. Past receipts below are saved runs. ' }),
+        el('a', { href: 'https://github.com/Masashi-Ono0611/daytona-hacksprint-tokyo-20261115', text: 'GitHub repo' })
+      );
+      b.classList.add('live');
+      busy(false);
+    }).catch(function () { /* stay read-only */ });
   }
 
   async function loadPast() {
