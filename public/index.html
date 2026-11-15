@@ -92,31 +92,93 @@
   }
   .static-banner { margin: 0 0 14px; padding: 12px 16px; border: 3px solid #2b2a33; border-radius: 14px; background: #fff3c4; box-shadow: 4px 4px 0 #2b2a33; line-height: 1.5; }
   .static-banner a { font-weight: 700; }
+  /* Night theme: same cyberpunk palette as the slide deck */
+  :root { --ink:#eef2ff; --ink2:#aab3d9; --cream:#0b0f2a; --butter:#120b2e; --paper:#141a3d; --line:#2a3370;
+    --term:#05071a; --termtext:#c9f7ff; --ok:#39ff9a; --bad:#ff5c7a; --amb:#ffc53d; --na:#b7b9d6; --sky:#22e6ff; --pink:#ff3df2; }
+  body { background-color:#0b0f2a; background-image:linear-gradient(rgba(34,230,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(34,230,255,.06) 1px,transparent 1px); background-size:40px 40px; }
+  .topband { border-bottom:3px solid #ff3df2; box-shadow:0 4px 18px rgba(255,61,242,.35); }
+  .wave { display:none; }
+  h1 { text-shadow:-2px 0 #ff3df2, 2px 0 #22e6ff; } h1 .sub { text-shadow:none; }
+  .pup { filter:drop-shadow(0 0 8px rgba(34,230,255,.7)); }
+  .tagline span { color:#0b0f2a; border-color:#ffc4fa; box-shadow:0 0 14px rgba(255,61,242,.7); }
+  section { border-color:#22e6ff; box-shadow:5px 5px 0 #ff3df2, 0 0 18px rgba(34,230,255,.3); }
+  input { background:#05071a; color:#eef2ff; border-color:#22e6ff; }
+  input::placeholder { color:#7d86b8; }
+  button { color:#0b0f2a; border-color:#eef2ff; box-shadow:3px 3px 0 #ff3df2; }
+  button:hover:not(:disabled) { box-shadow:4px 4px 0 #ff3df2; }
+  button:active:not(:disabled) { box-shadow:1px 1px 0 #ff3df2; }
+  #status.err { color:#ff5c7a; }
+  .badge { color:#0b0f2a; border-color:#eef2ff; box-shadow:0 0 12px rgba(183,185,214,.5); }
+  .b-verified, .b-runs { box-shadow:0 0 14px rgba(57,255,154,.7); }
+  .b-refuted, .b-fails { box-shadow:0 0 14px rgba(255,92,122,.7); }
+  .b-inconclusive { box-shadow:0 0 14px rgba(255,197,61,.7); }
+  tbody tr:nth-child(even) td { background:#182050; }
+  td code { background:#05071a; color:#c9f7ff; }
+  a, summary { color:#22e6ff; }
+  .static-banner { background:#1b2250; border-color:#ffc53d; box-shadow:4px 4px 0 #ffc53d; color:#eef2ff; }
 </style>
 </head>
 <body>
 <header class="topband">
   <div class="inner">
-    <svg class="pup" viewBox="0 0 300 310" role="img" aria-label="Proofy the puppy"><defs>
-    <g id="pup-base">
-    <ellipse cx="150" cy="262" rx="76" ry="36" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="6"/>
-    <ellipse cx="112" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
-    <ellipse cx="188" cy="286" rx="22" ry="11" fill="#f3dcbd" stroke="#2f2a3a" stroke-width="5"/>
-    <circle cx="150" cy="140" r="92" fill="#f8e8d0" stroke="#2f2a3a" stroke-width="6"/>
-    <ellipse cx="190" cy="122" rx="34" ry="30" fill="#e7c49c"/>
-    <ellipse cx="68" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(16 68 138)"/>
-    <ellipse cx="232" cy="138" rx="30" ry="60" fill="#a8775a" stroke="#2f2a3a" stroke-width="6" transform="rotate(-16 232 138)"/>
-    <ellipse cx="150" cy="182" rx="46" ry="32" fill="#fffaf0"/>
-    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#2f2a3a"/>
-    <circle cx="94" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
-    <circle cx="206" cy="174" r="12" fill="#eba3a3" opacity=".75"/>
+    <svg class="pup" viewBox="0 0 300 310" role="img" aria-label="Proofy the shiba"><defs>
+  <!-- Proofy: an original shiba mascot drawn for this deck (cool shiba with neon shades) -->
+  <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22e6ff"/><stop offset="1" stop-color="#ff3df2"/></linearGradient>
+  <clipPath id="pup-clip"><ellipse cx="150" cy="150" rx="97" ry="85"/></clipPath>
+  <g id="pup-base">
+    <path d="M218 262 C262 262 272 212 242 202 C216 194 208 222 228 228" fill="none" stroke="#1b1630" stroke-width="24" stroke-linecap="round"/>
+    <path d="M218 262 C262 262 272 212 242 202 C216 194 208 222 228 228" fill="none" stroke="#ee9a45" stroke-width="13" stroke-linecap="round"/>
+    <ellipse cx="150" cy="266" rx="74" ry="36" fill="#ee9a45" stroke="#1b1630" stroke-width="6"/>
+    <ellipse cx="150" cy="276" rx="40" ry="22" fill="#fff4e0"/>
+    <ellipse cx="114" cy="290" rx="22" ry="11" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+    <ellipse cx="186" cy="290" rx="22" ry="11" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+    <path d="M62 112 L74 22 Q78 12 87 20 L134 66 Z" fill="#ee9a45" stroke="#1b1630" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M238 112 L226 22 Q222 12 213 20 L166 66 Z" fill="#ee9a45" stroke="#1b1630" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M78 88 L84 40 L116 68 Z M222 88 L216 40 L184 68 Z" fill="#ffd2bd"/>
+    <ellipse cx="150" cy="150" rx="100" ry="88" fill="#ee9a45" stroke="#1b1630" stroke-width="6"/>
+    <g clip-path="url(#pup-clip)"><path d="M40 196 Q58 150 104 154 Q132 158 150 146 Q168 158 196 154 Q242 150 260 196 L260 260 L40 260 Z" fill="#fff4e0"/></g>
+    <ellipse cx="110" cy="110" rx="11" ry="7" fill="#fff4e0"/><ellipse cx="190" cy="110" rx="11" ry="7" fill="#fff4e0"/>
+    <ellipse cx="150" cy="166" rx="15" ry="10" fill="#1b1630"/><circle cx="145" cy="162" r="3.5" fill="#fff"/>
+    <circle cx="84" cy="184" r="13" fill="#ff9db0" opacity=".65"/><circle cx="216" cy="184" r="13" fill="#ff9db0" opacity=".65"/>
+  </g>
+  <g id="pup-shades">
+    <path d="M64 120 Q150 104 236 120 L232 146 Q224 172 190 168 Q166 164 160 148 Q150 141 140 148 Q134 164 110 168 Q76 172 68 146 Z" fill="#0d0b1e" stroke="#1b1630" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M68 122 Q150 107 232 122" fill="none" stroke="#22e6ff" stroke-width="3" opacity=".9"/>
+    <path d="M84 154 L106 126 L118 127 L96 157 Z M172 154 L194 126 L206 127 L184 157 Z" fill="url(#neon)"/>
   </g>
   <g id="f-happy">
-    <path d="M96 130 q16 -18 32 0 M172 130 q16 -18 32 0" fill="none" stroke="#2f2a3a" stroke-width="7" stroke-linecap="round"/>
-    <path d="M140 190 q10 18 20 0 z" fill="#e98585" stroke="#2f2a3a" stroke-width="3"/>
-    <path d="M150 176 v8 M150 184 q-12 10 -22 0 M150 184 q12 10 22 0" fill="none" stroke="#2f2a3a" stroke-width="5" stroke-linecap="round"/>
+    <use href="#pup-shades"/>
+    <path d="M150 176 v8 M150 184 q-12 10 -22 2 M150 184 q16 12 30 -4" fill="none" stroke="#1b1630" stroke-width="5" stroke-linecap="round"/>
   </g>
-    </defs><use href="#pup-base"/><use href="#f-happy"/></svg>
+  <g id="f-shock">
+    <circle cx="112" cy="138" r="18" fill="#fff" stroke="#1b1630" stroke-width="5"/><circle cx="112" cy="141" r="9" fill="#1b1630"/>
+    <circle cx="188" cy="138" r="18" fill="#fff" stroke="#1b1630" stroke-width="5"/><circle cx="188" cy="141" r="9" fill="#1b1630"/>
+    <g transform="translate(150 70) scale(.62) translate(-150 -136)"><use href="#pup-shades"/></g>
+    <ellipse cx="150" cy="200" rx="10" ry="13" fill="#1b1630"/>
+    <path d="M250 70 q12 18 0 26 q-12 -8 0 -26 z" fill="#9fdcff" stroke="#1b1630" stroke-width="3"/>
+  </g>
+  <g id="f-puzzle">
+    <use href="#pup-shades"/>
+    <path d="M170 100 l36 -12" stroke="#1b1630" stroke-width="7" stroke-linecap="round"/>
+    <path d="M134 196 q8 -8 16 0 t16 0" fill="none" stroke="#1b1630" stroke-width="5" stroke-linecap="round"/>
+    <text x="244" y="76" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="64" fill="#ffc53d" stroke="#1b1630" stroke-width="3">?</text>
+  </g>
+  <g id="p-receipt">
+    <g transform="rotate(14 196 206)"><rect x="166" y="186" width="66" height="44" rx="4" fill="#fff" stroke="#1b1630" stroke-width="4"/><path d="M176 199 h46 M176 210 h36 M176 221 h26" stroke="#1b1630" stroke-width="3" stroke-linecap="round"/></g>
+  </g>
+  <g id="p-glass">
+    <line x1="230" y1="250" x2="210" y2="272" stroke="#1b1630" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="250" cy="228" r="27" fill="#d8ecf3" fill-opacity=".85" stroke="#1b1630" stroke-width="7"/>
+    <path d="M238 216 q6 -6 14 -6" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="212" cy="268" r="14" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+  </g>
+  <g id="p-wave">
+    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#ee9a45" stroke-width="16" stroke-linecap="round"/>
+    <path d="M214 240 Q246 222 252 186" fill="none" stroke="#1b1630" stroke-width="22" stroke-linecap="round" opacity="0"/>
+    <circle cx="254" cy="178" r="17" fill="#fff4e0" stroke="#1b1630" stroke-width="5"/>
+  </g>
+  <g id="p-headset"><path d="M64 112 Q150 6 236 112" fill="none" stroke="#ff3df2" stroke-width="9" stroke-linecap="round"/><rect x="224" y="98" width="26" height="44" rx="9" fill="#1b2250" stroke="#22e6ff" stroke-width="4"/><path d="M236 142 Q232 186 196 198" fill="none" stroke="#22e6ff" stroke-width="4" stroke-linecap="round"/><circle cx="194" cy="198" r="7" fill="#ff3df2" stroke="#22e6ff" stroke-width="3"/></g>
+    </defs><use href="#pup-base"/><use href="#f-happy"/><use href="#p-headset"/></svg>
     <div>
       <h1>HackProof <span class="sub">— receipts for hackathon claims</span></h1>
       <p class="tagline"><span>Run it. Then judge it.</span></p>
